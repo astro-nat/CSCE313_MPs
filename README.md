@@ -9,6 +9,7 @@ Useful link for Git: http://rogerdudler.github.io/git-guide/
 Git in a nutshell:
 
 Before doing anything:
+    
     git pull (this pulls all the latest changes so you're up-to-date)
 
 Then:
