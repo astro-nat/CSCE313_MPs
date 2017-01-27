@@ -2,3 +2,4 @@
 All machine problems for CSCE313
 
 Natalie Cluck
+Megan Fischer
