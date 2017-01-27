@@ -1,13 +1,14 @@
 # CSCE313_MPs
 All machine problems for CSCE313
 
+Programmer Extraordinaires:
 Natalie Cluck
 Megan Fischer
 
 Useful link for Git: http://rogerdudler.github.io/git-guide/
 
-Git in a nutshell:
 
+# Git 101
 Before doing anything:
     
     git pull (this pulls all the latest changes so you're up-to-date)
