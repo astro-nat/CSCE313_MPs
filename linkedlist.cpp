@@ -91,7 +91,12 @@ void linked_list::Insert (int k, char* data_ptr, int data_len)
 
 int linked_list::Delete(int delete_key)
 {
-    
+    node* search = front_pointer;
+    while(front_pointer->next) {
+        if (*search).key == delete_key {
+            free(search);
+        }
+    }
 }
 
 /* Iterate through the list, if a given key exists, return the pointer to it's node */
