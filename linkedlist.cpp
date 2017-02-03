@@ -56,8 +56,8 @@ void linked_list::Init(int M, int b)
         node_iterator->next = next_node;
         
         //cout << "Moving iterator to next node" << endl;
-        
         node_iterator = node_iterator->next;
+        
         key++;
         reach++;
     }
@@ -67,7 +67,9 @@ void linked_list::Init(int M, int b)
 
 void linked_list::Destroy()
 {
-    free((node*)head_pointer);
+    if(head_pointer != NULL) {
+        free(head_pointer);
+    }
     setInitialized(false);
 }
 
