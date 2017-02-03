@@ -20,7 +20,7 @@
 using namespace std;
 
 // THIS CODE IS COPIED DIRECTLY FROM THE SUPPLIED SAMPLE CODE
-// SHOULD UPDATE BY DUE DATE 2/5
+// SHOULD UPDATE BY DUE DATE 2/3
 int main(int argc, char ** argv)
 {
     int b = 128;
@@ -31,7 +31,7 @@ int main(int argc, char ** argv)
     
     char * msg = "a sample message";
     
-    linked_list* test_list = new linked_list();
+    LinkedList* test_list = new LinkedList();
     
     test_list->Init(M,b); // initialize
     
@@ -57,7 +57,7 @@ int main(int argc, char ** argv)
     test_list->PrintList ();
     
     // a sample lookup operations that should return null, because it is looking up a non-existent number
-    node* kv = test_list->Lookup (3);
+    Node* kv = test_list->Lookup (3);
     if (kv)
     {
         std::cout << "Key = " << kv->key << ", Value Len = " << kv->value_len << std::endl;

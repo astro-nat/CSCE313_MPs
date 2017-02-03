@@ -7,14 +7,25 @@
 #include <cstring>
 
 struct Node {
+    
+    int key;
+    int value;
+    int value_len;
+    
     Node* next;
+    
+    Node() {}
 };
 
 class LinkedList {
 private:
     // ???
-    Node* head;
-    Node* free;
+    Node* head_pointer;
+    Node* front_pointer;
+    Node* free_pointer;
+    
+    int list_size;
+    
 public:
     LinkedList();
     
@@ -26,7 +37,7 @@ public:
     
     void Delete(int x);
     
-    char* Lookup(int x);
+    Node* Lookup(int x);
     
     void PrintList();
 };
