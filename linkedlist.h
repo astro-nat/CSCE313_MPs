@@ -1,13 +1,10 @@
 /* --------------------------------------------------------------------------- */
-/* Developer: Andrew Kirfman, Margaret Baxter                                  */
+/* Developer: Natalie Cluck, Megan Fischer                                     */
 /* Project: CSCE-313 Machine Problem #1                                        */
 /*                                                                             */
 /* File: ./MP1/linked_list.h                                                   */
 /* --------------------------------------------------------------------------- */
 
-
-// Note: If you've never seen this construct before, it's called an include
-// guard.  It prevents your header file from being defined more than once
 #ifndef _linkedlist_h_
 #define _linkedlist_h_
 
