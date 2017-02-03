@@ -25,36 +25,37 @@ linked_list::linked_list()
 
 void linked_list::Init(int M, int b)
 {
-    cout << "Storing memory of size " << M << endl;
+    //cout << "Storing memory of size " << M << endl;
     node* node_iterator = (node*)malloc(M);
     
-    cout << "Setting front pointer to memory allocation address" << endl;
+    //cout << "Setting front pointer to memory allocation address" << endl;
     front_pointer = node_iterator;
     
-    cout << "Setting free pointer to memory allocation address" << endl;
+    //cout << "Setting free pointer to memory allocation address" << endl;
     free_pointer = node_iterator;
     
-    cout << "Setting head pointer to memory allocation address" << endl;
+    //cout << "Setting head pointer to memory allocation address" << endl;
     head_pointer = (char*)node_iterator;
     
     int key = 0;
-    int reach = 0;
-    while(reach < M/b) {
-        cout << "Setting key and value of current iterator" << endl;
+    int reach = 1;
+    cout << "M/b: " << M/b << endl;
+    while(reach <= M/b) {
+        //cout << "Setting key and value of current iterator" << endl;
         (*node_iterator).key = key;
         (*node_iterator).value_len = 42;
         
-        cout << "Allocating space for next node" << endl;
+        //cout << "Allocating space for next node" << endl;
         node* next_node = (node*)((char*)node_iterator + b);
         
-        cout << "Setting iterator's next to new node" << endl;
+        //cout << "Setting iterator's next to new node" << endl;
         node_iterator->next = next_node;
         
-        cout << "Moving iterator to next node" << endl;
+        //cout << "Moving iterator to next node" << endl;
         
         node_iterator = node_iterator->next;
         key++;
-        reach = reach + b;
+        reach++;
         cout << "Reach: " << reach << endl;
     }
     
@@ -63,14 +64,18 @@ void linked_list::Init(int M, int b)
 
 void linked_list::Destroy()
 {
-   
+    free(head_pointer);
+    setInitialized(false);
 }
 
 /* Insert an element into the list with a given key, given data element, and with a given length*/
 void linked_list::Insert (int k, char* data_ptr, int data_len)
 {
+    /*
     if (getInitialized()) {
         cout << "Data ptr: " << sizeof(data_ptr) << endl;
+        
+        
         if(sizeof(data_ptr) > sizeof(data_len)){
             (*free_pointer).key = k;
             (*free_pointer).value_len = data_len;
@@ -80,6 +85,7 @@ void linked_list::Insert (int k, char* data_ptr, int data_len)
             cout << "List is full." << endl;
         }
     }
+     */
 }
 
 
