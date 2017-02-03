@@ -8,8 +8,8 @@
 
 // Note: If you've never seen this construct before, it's called an include
 // guard.  It prevents your header file from being defined more than once
-#ifndef _linkedlist_h_
-#define _linkedlist_h_
+#ifndef _linked_list_h_
+#define _linked_list_h_
 
 /* --------------------------------------------------------------------------- */
 /* Standard Library Includes                                                   */
@@ -20,6 +20,32 @@
 #include <climits>
 #include <cstring>
 
+
+
+/* IMPORTANT NOTE!!!
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * This sample code provided to you includes templates of functions which 
+ * count as extra credit in this assignment (namely, keeping track of free
+ * nodes).  If you decide not to implement the extra credit portion of the 
+ * assignment, be sure to delete those functions from your final submitted
+ * code.  
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ */ 
+
+
+
+
 struct node
 {
     node* next;
@@ -29,8 +55,8 @@ struct node
 class linked_list
 {
 private:
-    /* Always should point to the front of the data block allocated during Init() */
-    char *head_pointer;
+	/* Always should point to the front of the data block allocated during Init() */
+    char *head_pointer;     
     
     /* Always points to the front of the initialized list */
     node *front_pointer;
@@ -38,24 +64,24 @@ private:
     /* Always points to the last initialized node in the list */
     node *free_pointer;
     
-    /* Always points to the head of a list of nodes which are not used */
+    /* Always points to the head of a list of nodes which are not used */ 
     node *free_data_pointer;
     
     int block_size;
     int mem_size;
     int max_data_size;
     bool initialized;
-    
+
 public:
-    /* Constructor */
-    linked_list();
-    
-    /* Initialize the linked list and allocate memory */
-    /* Should only be called once from main           */
+	/* Constructor */
+	linked_list();
+
+	/* Initialize the linked list and allocate memory */
+	/* Should only be called once from main           */
     void Init(int M, int b);
     
     /* Destroys the linked list and frees all used resources */
-    void Destroy();
+    void Destroy(); 		 
     
     /* Inserts thea key and copies the value to the payload */
     void Insert(int key,char * value_ptr, int value_len);
