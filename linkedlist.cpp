@@ -66,7 +66,7 @@ void linked_list::Destroy()
     /*
     setInitialized(false);
     free(getHeadPointer());*/
-    free(head_pointer);
+    //free(head_pointer);
 }
 
 /* Insert an element into the list with a given key, given data element, and with a given length*/

@@ -14,11 +14,49 @@
 /* --------------------------------------------------------------------------- */
 
 #include "linkedlist.h"
+#include <ctype.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
 
 int main(int argc, char ** argv)
 {
     int b = 128;
     int M = b * 11;  // so we have space for 11 items
+    
+    /* GETOPT ALMOST WORKING */
+    /*
+    int aflag = 0;
+    int bflag = 0;
+    char *cvalue = NULL;
+    int index;
+    int c;
+    
+    opterr = 0;
+    
+    while ((c = getopt (argc, argv, "b:s:")) != -1)
+        switch (c)
+    {
+        case 'b':
+            b = (int)*optarg;
+            aflag = 1;
+            break;
+        case 's':
+            M = (int)*optarg;
+            bflag = 1;
+            break;
+        case '?':
+            if (isprint (optopt))
+                fprintf (stderr, "Unknown option `-%c'.\n", optopt);
+            else
+                fprintf (stderr,
+                         "Unknown option character `\\x%x'.\n",
+                         optopt);
+            return 1;
+        default:
+            abort ();
+    }
+     */
     
     char buf [1024];
     memset (buf, 1, 1024);		// set each byte to 1
