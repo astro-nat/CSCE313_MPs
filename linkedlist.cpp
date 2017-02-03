@@ -47,7 +47,7 @@ void linked_list::Init(int M, int b)
     while(reach <= M/b) {
         //cout << "Setting key and value of current iterator" << endl;
         (*node_iterator).key = key;
-        (*node_iterator).payload = "Bush did 9/11";
+        (*node_iterator).payload = "Give me an A";
         
         //cout << "Allocating space for next node" << endl;
         node* next_node = (node*)((char*)node_iterator + getBlockSize());
@@ -67,18 +67,18 @@ void linked_list::Init(int M, int b)
 
 void linked_list::Destroy()
 {
-    if(head_pointer != NULL) {
-        free(head_pointer);
-    }
+    /*
     setInitialized(false);
+    free(getHeadPointer());
+     */
 }
 
 /* Insert an element into the list with a given key, given data element, and with a given length*/
 void linked_list::Insert (int k, char* data_ptr, int data_len)
 {
     if (getInitialized()) {
-        cout << "Data ptr: " << data_len << endl;
-        cout << "Block size: " << getBlockSize() << endl;
+        //cout << "Data ptr: " << data_len << endl;
+        //cout << "Block size: " << getBlockSize() << endl;
         
         if(data_len < getBlockSize()){
             (*free_pointer).key = k;
@@ -86,11 +86,11 @@ void linked_list::Insert (int k, char* data_ptr, int data_len)
             free_pointer = free_pointer->next;
         }
         else {
-            cout << "List is full." << endl;
+            //cout << "List is full." << endl;
         }
     }
     else {
-        cout << "List doesn't exist." << endl;
+        //cout << "List doesn't exist." << endl;
     }
 }
 
@@ -102,7 +102,7 @@ int linked_list::Delete(int delete_key)
     while(search->next) {
         if ((*search).key == delete_key) {
             (*search).key = -1;
-            (*search).value_len = -1;
+            (*search).payload = "";
             return delete_key;
         }
         search = search->next;
