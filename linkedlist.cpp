@@ -47,7 +47,7 @@ void linked_list::Init(int M, int b)
     while(reach <= M/b) {
         //cout << "Setting key and value of current iterator" << endl;
         (*node_iterator).key = key;
-        (*node_iterator).payload = "Give me an A";
+        (*node_iterator).payload = "Gonna earn that A";
         
         //cout << "Allocating space for next node" << endl;
         node* next_node = (node*)((char*)node_iterator + getBlockSize());
