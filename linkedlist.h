@@ -23,6 +23,7 @@
 struct node
 {
     node* next;
+    char* payload;
     int key, value_len;
 };
 
