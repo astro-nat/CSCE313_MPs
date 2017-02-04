@@ -18,19 +18,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <getopt.h>
 
 int main(int argc, char ** argv)
 {
-    int b = 128;
-    int M = b * 11;  // so we have space for 11 items
-    
-    /* GETOPT ALMOST WORKING */
-    /*
-    int aflag = 0;
-    int bflag = 0;
-    char *cvalue = NULL;
-    int index;
+    int b;
+    int M;
     int c;
+    char *block, *mem;
+    extern char *optarg;
     
     opterr = 0;
     
@@ -38,25 +34,19 @@ int main(int argc, char ** argv)
         switch (c)
     {
         case 'b':
-            b = (int)*optarg;
-            aflag = 1;
+            block = optarg;
+            b = atoi(block);
             break;
         case 's':
-            M = (int)*optarg;
-            bflag = 1;
+            mem = optarg;
+            M = atoi(mem);
             break;
-        case '?':
-            if (isprint (optopt))
-                fprintf (stderr, "Unknown option `-%c'.\n", optopt);
-            else
-                fprintf (stderr,
-                         "Unknown option character `\\x%x'.\n",
-                         optopt);
-            return 1;
         default:
-            abort ();
+            printf("No values given. Using default values.\n");
+            b = 128;
+            M = b*11;
+            break;
     }
-    */
     
     char buf [1024];
     memset (buf, 1, 1024);		// set each byte to 1
