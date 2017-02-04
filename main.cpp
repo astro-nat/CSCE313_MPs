@@ -56,7 +56,7 @@ int main(int argc, char ** argv)
         default:
             abort ();
     }
-     */
+    */
     
     char buf [1024];
     memset (buf, 1, 1024);		// set each byte to 1

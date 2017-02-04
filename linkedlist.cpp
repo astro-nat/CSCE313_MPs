@@ -63,10 +63,12 @@ void linked_list::Init(int M, int b)
 
 void linked_list::Destroy()
 {
-    /*
-    setInitialized(false);
-    free(getHeadPointer());*/
-    //free(head_pointer);
+    while(free_pointer != NULL){
+        free_pointer = free_pointer->next;
+        free(free_pointer);
+        free_pointer = free_pointer;
+
+    }
 }
 
 /* Insert an element into the list with a given key, given data element, and with a given length*/
