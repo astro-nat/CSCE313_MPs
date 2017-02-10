@@ -107,7 +107,7 @@ public:
     int getMemSize();
     int getMaxDataSize();
     int getNumTiers();
-    int getInitialized();
+    bool getInitialized();
     
     /* Setter Functions */
     void setHeadPointer(char** new_head_pointer);

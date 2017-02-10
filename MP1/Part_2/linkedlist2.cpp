@@ -21,6 +21,7 @@ linked_list2::linked_list2()
 // implement t
 void linked_list2::Init(int M, int b, int t)
 {
+    /*
     setBlockSize(b);
     setMemSize(M);
     setMaxDataSize(b);
@@ -57,23 +58,27 @@ void linked_list2::Init(int M, int b, int t)
         key++;
         reach++;
     }
+     */
     
     setInitialized(true);
 }
 
 void linked_list2::Destroy()
 {
+    /*
     while(free_pointer != NULL){
         free_pointer = free_pointer->next;
         free(free_pointer);
         free_pointer = free_pointer;
 
     }
+     */
 }
 
 /* Insert an element into the list with a given key, given data element, and with a given length*/
 void linked_list2::Insert (int k, char* data_ptr, int data_len)
 {
+    /*
     if (getInitialized()) {
         //cout << "Data ptr: " << data_len << endl;
         //cout << "Block size: " << getBlockSize() << endl;
@@ -90,11 +95,13 @@ void linked_list2::Insert (int k, char* data_ptr, int data_len)
     else {
         //cout << "List doesn't exist." << endl;
     }
+     */
 }
 
 
 int linked_list2::Delete(int delete_key)
 {
+    /*
     node* search = front_pointer;
     
     while(search->next) {
@@ -105,6 +112,7 @@ int linked_list2::Delete(int delete_key)
         }
         search = search->next;
     }
+     */
     return delete_key;
 }
 
@@ -112,6 +120,7 @@ int linked_list2::Delete(int delete_key)
 /* otherwise, return NULL                                                           */
 struct node* linked_list2::Lookup(int lookup_key)
 {
+    /*
     node* search = front_pointer;
     
     while(search->next) {
@@ -120,6 +129,7 @@ struct node* linked_list2::Lookup(int lookup_key)
         }
         search = search->next;
     }
+     */
     return NULL;
 }
 
@@ -172,6 +182,7 @@ void linked_list2::PrintList()
      * here are for pedagogical purposes only)
      */
 
+    /*
     if(front_pointer != NULL) {
         
         node* node_iterator = front_pointer;
@@ -186,31 +197,33 @@ void linked_list2::PrintList()
         }
 
     }
+     */
     
 }
 
-int linked_list22::Find_tier(int key)
+int linked_list2::Find_tier(int key)
 {
-    
+    // IMPLEMENET THIS
+    return key;
 }
 
 /* Getter Functions */
-char* linked_list2::getHeadPointer()
+char** linked_list2::getHeadPointer()
 {
     return head_pointer;
 }
 
-node* linked_list2::getFrontPointer()
+node** linked_list2::getFrontPointer()
 {
     return front_pointer;
 }
 
-node* linked_list2::getFreePointer()
+node** linked_list2::getFreePointer()
 {
     return free_pointer;
 }
 
-node* linked_list2::getFreeDataPointer()
+node** linked_list2::getFreeDataPointer()
 {
     return free_data_pointer;
 }
@@ -236,22 +249,22 @@ bool linked_list2::getInitialized()
 }
 
 /* Setter Functions */
-void linked_list2::setHeadPointer(char *new_pointer)
+void linked_list2::setHeadPointer(char **new_pointer)
 {
     head_pointer = new_pointer;
 }
 
-void linked_list2::setFrontPointer(node* new_pointer)
+void linked_list2::setFrontPointer(node** new_pointer)
 {
     front_pointer = new_pointer;
 }
 
-void linked_list2::setFreePointer(node* new_pointer)
+void linked_list2::setFreePointer(node** new_pointer)
 {
     free_pointer = new_pointer;
 }
 
-void linked_list2::setFreeDataPointer(node* new_pointer)
+void linked_list2::setFreeDataPointer(node** new_pointer)
 {
     free_data_pointer = new_pointer;
 }
@@ -271,7 +284,7 @@ void linked_list2::setMaxDataSize(int new_max_data_size)
     max_data_size = new_max_data_size;
 }
 
-void linked_list22::setNumTiers(int new_num_tiers){
+void linked_list2::setNumTiers(int new_num_tiers){
     
 }
 
