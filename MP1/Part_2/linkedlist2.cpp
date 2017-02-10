@@ -1,8 +1,8 @@
 /* --------------------------------------------------------------------------- */
-/* Developer: Natalie Cluck, Megan Fischer                                  */
+/* Developer: Natalie Cluck, Megan Fischer                                     */
 /* Project: CSCE-313 Machine Problem #1                                        */
 /*                                                                             */
-/* File: ./MP1/linked_list2.cpp                                                 */
+/* File: ./MP1/linked_list2.cpp                                                */
 /* --------------------------------------------------------------------------- */
 
 #include "linkedlist2.h"
@@ -16,16 +16,27 @@ linked_list2::linked_list2()
     front_pointer = NULL;
     free_pointer = NULL;
     free_data_pointer = NULL;
+    cout << "Constructor called" << endl;
 }
 
 // implement t
 void linked_list2::Init(int M, int b, int t)
 {
-    /*
     setBlockSize(b);
     setMemSize(M);
     setMaxDataSize(b);
+    setNumTiers(t);
     
+    head_pointer = (char**)malloc(t*sizeof(char*));
+    
+    for(int i = 0; i < t; i++) {
+        head_pointer[i] = (char*)malloc(M/t);
+    }
+    
+    front_pointer = (node**)head_pointer[0];
+    free_pointer = (node**)head_pointer[0];
+    
+    /*
     //cout << "Storing memory of size " << M << endl;
     node* node_iterator = (node*)malloc(M);
     
@@ -61,23 +72,30 @@ void linked_list2::Init(int M, int b, int t)
      */
     
     setInitialized(true);
+    cout << "Initialized" << endl;
 }
 
 void linked_list2::Destroy()
 {
-    /*
-    while(free_pointer != NULL){
-        free_pointer = free_pointer->next;
-        free(free_pointer);
-        free_pointer = free_pointer;
-
+    cout << "Destorying the list" << endl;
+    for(int i = 0; i < num_tiers; i++) {
+        while(free_pointer[i] != NULL){
+            free_pointer[i] = free_pointer[i]->next;
+            free(free_pointer);
+            free_pointer[i] = free_pointer[i];
+        }
     }
-     */
+    cout << "List destroyed!" << endl;
 }
 
 /* Insert an element into the list with a given key, given data element, and with a given length*/
 void linked_list2::Insert (int k, char* data_ptr, int data_len)
 {
+    cout << "Inserrting into list..." << endl;
+    if (getInitialized()) {
+        
+    }
+    
     /*
     if (getInitialized()) {
         //cout << "Data ptr: " << data_len << endl;
@@ -96,41 +114,50 @@ void linked_list2::Insert (int k, char* data_ptr, int data_len)
         //cout << "List doesn't exist." << endl;
     }
      */
+    cout << "Inserted into list yay" << endl;
 }
 
 
 int linked_list2::Delete(int delete_key)
 {
-    /*
-    node* search = front_pointer;
+    cout << "Deleting from list..." << endl;
+    node* search = front_pointer[0];
     
-    while(search->next) {
-        if ((*search).key == delete_key) {
-            (*search).key = -1;
-            (*search).payload = "";
-            return delete_key;
+    int i = 0;
+    if(delete_key < num_tiers){
+        while(i < delete_key) {
+            search = front_pointer[i];
         }
-        search = search->next;
+    
+        node temp_pointer = search[0];
+        for(int i = 0; i < (mem_size/num_tiers); i++) {
+            temp_pointer = search[i];
+            temp_pointer.key = -1;
+            temp_pointer.payload = "";
+        }
+        cout << "IT'S GONE SUCKAS" << endl;
+        return delete_key;
     }
-     */
-    return delete_key;
 }
 
 /* Iterate through the list, if a given key exists, return the pointer to it's node */
 /* otherwise, return NULL                                                           */
 struct node* linked_list2::Lookup(int lookup_key)
 {
-    /*
-    node* search = front_pointer;
+    cout << "Looking up a key..." << endl;
+    node* search = front_pointer[0];
     
-    while(search->next) {
-        if ((*search).key == lookup_key) {
-            return search;
+    int i = 0;
+    if(lookup_key < num_tiers) {
+        while(i < lookup_key) {
+            search = front_pointer[i];
         }
-        search = search->next;
+        cout << "FOUND IT" << endl;
+        return search;
     }
-     */
+    cout << "Ain't no key like that fam" << endl;
     return NULL;
+    
 }
 
 /* Prints the list by printing the key and the data of each node */
@@ -182,22 +209,31 @@ void linked_list2::PrintList()
      * here are for pedagogical purposes only)
      */
 
-    /*
+    cout << "Printing the list..." << endl;
     if(front_pointer != NULL) {
         
-        node* node_iterator = front_pointer;
+        //char** tier_iterator = head_pointer;
+        node* list_iterator = (*front_pointer);
         
-        while(node_iterator->next != NULL) {
-            std::cout << "Node: " << std::endl;
-            std::cout << " - Key: " << (*node_iterator).key << std::endl;
-            std::cout << " - Data: " << (*node_iterator).payload << std::endl;
+        int i = 0;
+        while(i < num_tiers) {
             
-            node_iterator = node_iterator->next;
+            list_iterator = (node*)head_pointer[i][0];
             
+            while((list_iterator)->next != NULL) {
+                std::cout << "Tier " << i << endl;
+                std::cout << "Node: " << std::endl;
+                std::cout << " - Key: " << (list_iterator)->key << std::endl;
+                std::cout << " - Data: " << (list_iterator)->payload << std::endl;
+            
+                list_iterator = list_iterator->next;
+            
+            }
+            
+            i++;
         }
 
     }
-     */
     
 }
 
@@ -285,7 +321,7 @@ void linked_list2::setMaxDataSize(int new_max_data_size)
 }
 
 void linked_list2::setNumTiers(int new_num_tiers){
-    
+    num_tiers = new_num_tiers;
 }
 
 void linked_list2::setInitialized(bool new_initialized)
