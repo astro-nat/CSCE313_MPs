@@ -22,19 +22,24 @@ linked_list2::linked_list2()
 // implement t
 void linked_list2::Init(int M, int b, int t)
 {
+    cout << "Making the list homies" << endl;
     setBlockSize(b);
     setMemSize(M);
     setMaxDataSize(b);
     setNumTiers(t);
     
     head_pointer = (char**)malloc(t*sizeof(char*));
+    free_pointer = (node**)malloc(t*sizeof(node*));
+    front_pointer = (node**)malloc(t*sizeof(node*));
     
     for(int i = 0; i < t; i++) {
         head_pointer[i] = (char*)malloc(M/t);
+        free_pointer[i] = (node*)head_pointer[i];
+        front_pointer[i] = NULL;
     }
     
-    front_pointer = (node**)head_pointer[0];
-    free_pointer = (node**)head_pointer[0];
+    //front_pointer = (node**)head_pointer[0];
+    //free_pointer = (node**)head_pointer[0];
     
     /*
     //cout << "Storing memory of size " << M << endl;
@@ -72,7 +77,7 @@ void linked_list2::Init(int M, int b, int t)
      */
     
     setInitialized(true);
-    cout << "Initialized" << endl;
+    cout << "Initialized aaaaw yeaaaaah" << endl;
 }
 
 void linked_list2::Destroy()
@@ -91,11 +96,36 @@ void linked_list2::Destroy()
 /* Insert an element into the list with a given key, given data element, and with a given length*/
 void linked_list2::Insert (int k, char* data_ptr, int data_len)
 {
-    cout << "Inserrting into list..." << endl;
-    if (getInitialized()) {
-        
-    }
+    std::cout << "Inserting into list..." << std::endl;
     
+    if(getInitialized()) {
+        
+        int i = 0;
+        if(data_len < getBlockSize()) {
+            
+            //if(front_pointer[0] == NULL) {
+                //front_pointer[0] == (node*)head_pointer[0];
+                free_pointer[i]->key = k;
+                free_pointer[i]->payload = data_ptr;
+                free_pointer[i] = free_pointer[i]->next;
+            }
+        }
+    
+    
+    
+    /*
+    if (getInitialized()) {
+        if(data_len < getBlockSize()) {
+            (*free_pointer)->key = k;
+            (*free_pointer)->payload = data_ptr;
+            (*free_pointer) = (*free_pointer)->next;
+        }
+        else {
+            cout << "List is full." << endl;
+        }
+    }
+     */
+
     /*
     if (getInitialized()) {
         //cout << "Data ptr: " << data_len << endl;
@@ -120,6 +150,7 @@ void linked_list2::Insert (int k, char* data_ptr, int data_len)
 
 int linked_list2::Delete(int delete_key)
 {
+    /*
     cout << "Deleting from list..." << endl;
     node* search = front_pointer[0];
     
@@ -138,6 +169,8 @@ int linked_list2::Delete(int delete_key)
         cout << "IT'S GONE SUCKAS" << endl;
         return delete_key;
     }
+     */
+    return 0;
 }
 
 /* Iterate through the list, if a given key exists, return the pointer to it's node */
@@ -213,8 +246,24 @@ void linked_list2::PrintList()
     if(front_pointer != NULL) {
         
         //char** tier_iterator = head_pointer;
-        node* list_iterator = (*front_pointer);
+        node* list_iterator = front_pointer[0];
         
+        for(int i = 0; i < num_tiers; i++) {
+            list_iterator = front_pointer[i];
+            
+            while((list_iterator)->next != NULL) {
+                std::cout << "Tier " << i << endl;
+                std::cout << "Node: " << std::endl;
+                std::cout << " - Key: " << (list_iterator)->key << std::endl;
+                std::cout << " - Data: " << (list_iterator)->payload << std::endl;
+                
+                list_iterator = list_iterator->next;
+                
+            }
+
+        }
+        
+        /*
         int i = 0;
         while(i < num_tiers) {
             
@@ -232,15 +281,22 @@ void linked_list2::PrintList()
             
             i++;
         }
+         */
 
     }
     
 }
 
+// WORK ON THIS LATER, THEN IMPLEMENT INSERT
 int linked_list2::Find_tier(int key)
 {
-    // IMPLEMENET THIS
-    return key;
+    int section = (mem_size/num_tiers);
+    int count = 0;
+    
+    for(int i = 0; i < count; i++) {
+        
+    }
+    //return head_pointer[key];
 }
 
 /* Getter Functions */
