@@ -45,13 +45,14 @@ void linked_list2::Init(int M, int b, int t)
 void linked_list2::Destroy()
 {
     cout << "Destroying the list" << endl;
-    /*for(int i = 0; i < num_tiers; i++) {
+    
+    for(int i = 0; i < num_tiers; i++) {
         while(free_pointer[i] != NULL){
             free_pointer[i] = free_pointer[i]->next;
             free(free_pointer);
             free_pointer[i] = free_pointer[i];
         }
-    }*/
+    }
     cout << "List destroyed!" << endl;
 }
 
@@ -59,76 +60,53 @@ void linked_list2::Destroy()
 void linked_list2::Insert (int k, char* data_ptr, int data_len)
 {
     std::cout << "Inserting into list..." << std::endl;
-    /*
      if(getInitialized()) {
-     int i = 0;
-     if(data_len < getBlockSize()) {
-     //if(front_pointer[0] == NULL) {
-     front_pointer[0] = (node*)head_pointer[0];
-     free_pointer[i]->key = k;
-     free_pointer[i]->payload = data_ptr;
-     free_pointer[i] = free_pointer[i]->next;
+         int i = Find_tier(k);
+         if(data_len < getBlockSize()) {
+             if(front_pointer[0] == NULL) {
+                 front_pointer[0] = (node*)head_pointer[0];
+                 free_pointer[i]->key = k;
+                 free_pointer[i]->payload = data_ptr;
+                 free_pointer[i] = free_pointer[i]->next;
+             }
+    
+         }
+     }
+    /*
+     else {
+         cout << "List is full." << endl;
+     }
+    
+     else {
+         cout << "List doesn't exist." << endl;
      }*/
-    
-    
-    
-    
-    /*
-     if (getInitialized()) {
-     if(data_len < getBlockSize()) {
-     (*free_pointer)->key = k;
-     (*free_pointer)->payload = data_ptr;
-     (*free_pointer) = (*free_pointer)->next;
-     }
-     else {
-     cout << "List is full." << endl;
-     }
-     }
-     */
-    
-    /*
-     if (getInitialized()) {
-     //cout << "Data ptr: " << data_len << endl;
-     //cout << "Block size: " << getBlockSize() << endl;
-     
-     if(data_len < getBlockSize()){
-     (*free_pointer).key = k;
-     (*free_pointer).payload = data_ptr;
-     free_pointer = free_pointer->next;
-     }
-     else {
-     //cout << "List is full." << endl;
-     }
-     }
-     else {
-     //cout << "List doesn't exist." << endl;
-     }
-     */
+
     cout << "Inserted into list yay" << endl;
 }
 
 
 int linked_list2::Delete(int delete_key)
 {
-    /*
+    
      cout << "Deleting from list..." << endl;
      node* search = front_pointer[0];
      
      int i = 0;
      if(delete_key < num_tiers){
-     while(i < delete_key) {
-     search = front_pointer[i];
+         while(i < delete_key) {
+             search = front_pointer[i];
      }
      
      node temp_pointer = search[0];
      for(int i = 0; i < (mem_size/num_tiers); i++) {
-     temp_pointer = search[i];
-     temp_pointer.key = -1;
-     temp_pointer.payload = "";
+         temp_pointer = search[i];
+         temp_pointer.key = -1;
+         temp_pointer.payload = "";
      }
+         
      cout << "IT'S GONE SUCKAS" << endl;
      return delete_key;
-     }*/
+     }
     
     return 0;
 }
@@ -156,29 +134,25 @@ struct node* linked_list2::Lookup(int lookup_key)
 /* Prints the list by printing the key and the data of each node */
 void linked_list2::PrintList()
 {
-    /*
+    
     cout << "Printing the list..." << endl;
     if(front_pointer != NULL) {
-        
         //char** tier_iterator = head_pointer;
-        node* list_iterator = front_pointer[0];
-        
-        for(int i = 0; i < num_tiers; i++) {
-            list_iterator = front_pointer[i];
-            
+        //node* list_iterator = front_pointer[0];
+        for(int i = 1; i <= num_tiers; i++) {
+            node* list_iterator = front_pointer[i];
             while((list_iterator)->next != NULL) {
                 std::cout << "Tier " << i << endl;
                 std::cout << "Node: " << std::endl;
                 std::cout << " - Key: " << (list_iterator)->key << std::endl;
                 std::cout << " - Data: " << (list_iterator)->payload << std::endl;
-                
                 list_iterator = list_iterator->next;
                 
             }
             
         }
         
-    }*/
+    }
     
 }
 
