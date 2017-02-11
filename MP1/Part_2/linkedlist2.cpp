@@ -45,13 +45,13 @@ void linked_list2::Init(int M, int b, int t)
 void linked_list2::Destroy()
 {
     cout << "Destroying the list" << endl;
-    for(int i = 0; i < num_tiers; i++) {
+    /*for(int i = 0; i < num_tiers; i++) {
         while(free_pointer[i] != NULL){
             free_pointer[i] = free_pointer[i]->next;
             free(free_pointer);
             free_pointer[i] = free_pointer[i];
         }
-    }
+    }*/
     cout << "List destroyed!" << endl;
 }
 
@@ -128,8 +128,8 @@ int linked_list2::Delete(int delete_key)
      }
      cout << "IT'S GONE SUCKAS" << endl;
      return delete_key;
-     }
-     */
+     }*/
+    
     return 0;
 }
 
@@ -156,7 +156,7 @@ struct node* linked_list2::Lookup(int lookup_key)
 /* Prints the list by printing the key and the data of each node */
 void linked_list2::PrintList()
 {
-    
+    /*
     cout << "Printing the list..." << endl;
     if(front_pointer != NULL) {
         
@@ -178,7 +178,7 @@ void linked_list2::PrintList()
             
         }
         
-    }
+    }*/
     
 }
 
