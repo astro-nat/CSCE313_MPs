@@ -38,51 +38,13 @@ void linked_list2::Init(int M, int b, int t)
         front_pointer[i] = NULL;
     }
     
-    //front_pointer = (node**)head_pointer[0];
-    //free_pointer = (node**)head_pointer[0];
-    
-    /*
-    //cout << "Storing memory of size " << M << endl;
-    node* node_iterator = (node*)malloc(M);
-    
-    //cout << "Setting front pointer to memory allocation address" << endl;
-    front_pointer = node_iterator;
-    
-    //cout << "Setting free pointer to memory allocation address" << endl;
-    free_pointer = node_iterator;
-    
-    //cout << "Setting head pointer to memory allocation address" << endl;
-    head_pointer = (char*)node_iterator;
-    
-    int key = 0;
-    int reach = 1;
-    
-    while(reach <= M/b) {
-        //cout << "Setting key and value of current iterator" << endl;
-        (*node_iterator).key = key;
-        (*node_iterator).payload = "Gonna earn that A";
-        
-        //cout << "Allocating space for next node" << endl;
-        node* next_node = (node*)((char*)node_iterator + getBlockSize());
-        
-        //cout << "Setting iterator's next to new node" << endl;
-        node_iterator->next = next_node;
-        
-        //cout << "Moving iterator to next node" << endl;
-        node_iterator = node_iterator->next;
-        
-        key++;
-        reach++;
-    }
-     */
-    
     setInitialized(true);
     cout << "Initialized aaaaw yeaaaaah" << endl;
 }
 
 void linked_list2::Destroy()
 {
-    cout << "Destorying the list" << endl;
+    cout << "Destroying the list" << endl;
     for(int i = 0; i < num_tiers; i++) {
         while(free_pointer[i] != NULL){
             free_pointer[i] = free_pointer[i]->next;
@@ -97,52 +59,50 @@ void linked_list2::Destroy()
 void linked_list2::Insert (int k, char* data_ptr, int data_len)
 {
     std::cout << "Inserting into list..." << std::endl;
+    /*
+     if(getInitialized()) {
+     int i = 0;
+     if(data_len < getBlockSize()) {
+     //if(front_pointer[0] == NULL) {
+     front_pointer[0] = (node*)head_pointer[0];
+     free_pointer[i]->key = k;
+     free_pointer[i]->payload = data_ptr;
+     free_pointer[i] = free_pointer[i]->next;
+     }*/
     
-    if(getInitialized()) {
-        
-        int i = 0;
-        if(data_len < getBlockSize()) {
-            
-            //if(front_pointer[0] == NULL) {
-                //front_pointer[0] == (node*)head_pointer[0];
-                free_pointer[i]->key = k;
-                free_pointer[i]->payload = data_ptr;
-                free_pointer[i] = free_pointer[i]->next;
-            }
-        }
     
     
     
     /*
-    if (getInitialized()) {
-        if(data_len < getBlockSize()) {
-            (*free_pointer)->key = k;
-            (*free_pointer)->payload = data_ptr;
-            (*free_pointer) = (*free_pointer)->next;
-        }
-        else {
-            cout << "List is full." << endl;
-        }
-    }
+     if (getInitialized()) {
+     if(data_len < getBlockSize()) {
+     (*free_pointer)->key = k;
+     (*free_pointer)->payload = data_ptr;
+     (*free_pointer) = (*free_pointer)->next;
+     }
+     else {
+     cout << "List is full." << endl;
+     }
+     }
      */
-
+    
     /*
-    if (getInitialized()) {
-        //cout << "Data ptr: " << data_len << endl;
-        //cout << "Block size: " << getBlockSize() << endl;
-        
-        if(data_len < getBlockSize()){
-            (*free_pointer).key = k;
-            (*free_pointer).payload = data_ptr;
-            free_pointer = free_pointer->next;
-        }
-        else {
-            //cout << "List is full." << endl;
-        }
-    }
-    else {
-        //cout << "List doesn't exist." << endl;
-    }
+     if (getInitialized()) {
+     //cout << "Data ptr: " << data_len << endl;
+     //cout << "Block size: " << getBlockSize() << endl;
+     
+     if(data_len < getBlockSize()){
+     (*free_pointer).key = k;
+     (*free_pointer).payload = data_ptr;
+     free_pointer = free_pointer->next;
+     }
+     else {
+     //cout << "List is full." << endl;
+     }
+     }
+     else {
+     //cout << "List doesn't exist." << endl;
+     }
      */
     cout << "Inserted into list yay" << endl;
 }
@@ -151,24 +111,24 @@ void linked_list2::Insert (int k, char* data_ptr, int data_len)
 int linked_list2::Delete(int delete_key)
 {
     /*
-    cout << "Deleting from list..." << endl;
-    node* search = front_pointer[0];
-    
-    int i = 0;
-    if(delete_key < num_tiers){
-        while(i < delete_key) {
-            search = front_pointer[i];
-        }
-    
-        node temp_pointer = search[0];
-        for(int i = 0; i < (mem_size/num_tiers); i++) {
-            temp_pointer = search[i];
-            temp_pointer.key = -1;
-            temp_pointer.payload = "";
-        }
-        cout << "IT'S GONE SUCKAS" << endl;
-        return delete_key;
-    }
+     cout << "Deleting from list..." << endl;
+     node* search = front_pointer[0];
+     
+     int i = 0;
+     if(delete_key < num_tiers){
+     while(i < delete_key) {
+     search = front_pointer[i];
+     }
+     
+     node temp_pointer = search[0];
+     for(int i = 0; i < (mem_size/num_tiers); i++) {
+     temp_pointer = search[i];
+     temp_pointer.key = -1;
+     temp_pointer.payload = "";
+     }
+     cout << "IT'S GONE SUCKAS" << endl;
+     return delete_key;
+     }
      */
     return 0;
 }
@@ -196,52 +156,7 @@ struct node* linked_list2::Lookup(int lookup_key)
 /* Prints the list by printing the key and the data of each node */
 void linked_list2::PrintList()
 {
-    /* IMPORTANT NOTE!
-     *
-     * In order for the script that will grade your assignment to work
-     * (i.e. so you get a grade higher than a 0),
-     * you need to print out each member of the list using the format below.
-     * Your print list function should be written as a while loop that prints
-     * the tier of the list and then each node underneath it.
-     * the following four lines exactly for each node and nothing else.  If
-     * you have any difficulties, talk to your TA and he will explain it further.
-     *
-     * The output lines that you should use are provided so that you will know
-     * exactly what you should output.
-     */
-    // Do this for every tier
-    // std::cout << "Tier " << <TIER NUMBER GOESHERE> << std::endl;
     
-    // Do this for every node
-    //std::cout << "Node: " << std::endl;
-    //std::cout << " - Key: " << <KEY GOES HERE!> << std::endl;
-    //std::cout << " - Data: " << <KEY GOES HERE!> << std::endl;
-    
-    /* Short example:
-     *   - Assume a list with two tiers each with two elements in each tier.
-     *     the print out would appear as follows
-     *
-     * Tier 0
-     * Node:
-     *  - Key: 1
-     *  - Data: Hello
-     * Node:
-     *  - Key: 2
-     *  - Data: World!
-     * Tier 1
-     * Node:
-     *  - Key: 3
-     *  - Data: Hello
-     * Node:
-     *  - Key: 4
-     *  - Data: World!
-     *
-     * ^^ Your output needs to exactly match this model to be counted as correct.
-     * (With the exception that the values for key and data will be different
-     * depending on what insertions you perform into your list.  The values provided
-     * here are for pedagogical purposes only)
-     */
-
     cout << "Printing the list..." << endl;
     if(front_pointer != NULL) {
         
@@ -260,43 +175,23 @@ void linked_list2::PrintList()
                 list_iterator = list_iterator->next;
                 
             }
-
+            
         }
         
-        /*
-        int i = 0;
-        while(i < num_tiers) {
-            
-            list_iterator = (node*)head_pointer[i][0];
-            
-            while((list_iterator)->next != NULL) {
-                std::cout << "Tier " << i << endl;
-                std::cout << "Node: " << std::endl;
-                std::cout << " - Key: " << (list_iterator)->key << std::endl;
-                std::cout << " - Data: " << (list_iterator)->payload << std::endl;
-            
-                list_iterator = list_iterator->next;
-            
-            }
-            
-            i++;
-        }
-         */
-
     }
     
 }
 
-// WORK ON THIS LATER, THEN IMPLEMENT INSERT
 int linked_list2::Find_tier(int key)
 {
-    int section = (mem_size/num_tiers);
-    int count = 0;
-    
-    for(int i = 0; i < count; i++) {
-        
+    int section = (2147483647/num_tiers);
+    int j;
+    for(int j = 0; j < num_tiers; j++) {
+        if(key >= j*section && key < (j+1)*section) {
+            return j;
+        }
     }
-    //return head_pointer[key];
+    
 }
 
 /* Getter Functions */
@@ -384,4 +279,3 @@ void linked_list2::setInitialized(bool new_initialized)
 {
     initialized = new_initialized;
 }
-
