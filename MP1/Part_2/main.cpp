@@ -18,12 +18,40 @@
 /* --------------------------------------------------------------------------- */
 
 #include "linkedlist2.h"
+#include <ctype.h>
+#include <unistd.h>
 
 int main(int argc, char ** argv)
 {
-    int b = 128;
-    int M = b * 16;  	// so we have space for 16 items in the whole list
-    int t = 4;			// 4 tiers and 4 items per tier
+    int b;
+    int M;
+    int t;
+    int c;
+    char *block, *mem, *tiers;
+    extern char *optarg;
+    
+    while ((c = getopt (argc, argv, "b:s:t:")) != -1)
+        switch (c)
+    {
+        case 'b':
+            block = optarg;
+            b = atoi(block);
+            break;
+        case 's':
+            mem = optarg;
+            M = atoi(mem);
+            break;
+        case 't':
+            tiers = optarg;
+            t = atoi(tiers);
+            break;
+        default:
+            printf("No values given. Using default values.\n");
+            b = 128;
+            M = b*16;
+            t = 4;
+            break;
+    }
     
     char buf [1024];
     memset (buf, 1, 1024);		// set each byte to 1

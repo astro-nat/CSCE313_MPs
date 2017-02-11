@@ -14,20 +14,16 @@
 /* --------------------------------------------------------------------------- */
 
 #include "linkedlist.h"
+#include <ctype.h>
+#include <unistd.h>
 
 int main(int argc, char ** argv)
 {
-    int b = 128;
-    int M = b * 11;  // so we have space for 11 items
-    
-    /*
     int b;
     int M;
     int c;
     char *block, *mem;
     extern char *optarg;
-    
-    opterr = 0;
     
     while ((c = getopt (argc, argv, "b:s:")) != -1)
         switch (c)
@@ -45,7 +41,7 @@ int main(int argc, char ** argv)
             b = 128;
             M = b*11;
             break;
-    }*/
+    }
     
     char buf [1024];
     memset (buf, 1, 1024);		// set each byte to 1
