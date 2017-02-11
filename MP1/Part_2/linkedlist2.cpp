@@ -87,6 +87,7 @@ void linked_list2::Insert (int k, char* data_ptr, int data_len)
                 cout << "Free pointer NOT NULL" << endl;
                 free_pointer[i]->key = k;
                 free_pointer[i]->payload = data_ptr;
+                free_pointer[i]->next = NULL;
                 free_pointer[i] = free_pointer[i]->next;
             }
             else {
@@ -152,29 +153,31 @@ struct node* linked_list2::Lookup(int lookup_key)
 void linked_list2::PrintList()
 {
     
-    //cout << "Printing the list..." << endl;
-    //if(front_pointer != NULL) {
+    cout << "Printing the list..." << endl;
+    if(front_pointer != NULL) {
         //char** tier_iterator = head_pointer;
         node* list_iterator;
         for(int i = 0; i < num_tiers; i++) {
             std::cout << "Tier " << i << endl;
             if(front_pointer[i] != NULL) {
                 list_iterator = front_pointer[i];
-                //while((list_iterator)->next != NULL) {
-                std::cout << "Node: " << std::endl;
-                std::cout << " - Key: " << (list_iterator)->key << std::endl;
-                std::cout << " - Data: " << (list_iterator)->payload << std::endl;
-                //list_iterator = list_iterator->next;
-            }
-            
-            //}
-            
-        }
+                while(list_iterator->next != NULL) {
+                    std::cout << "Node: " << std::endl;
+                    std::cout << " - Key: " << list_iterator->key << std::endl;
+                    std::cout << " - Data: " << list_iterator->payload << std::endl;
+                    list_iterator->next = NULL;
+                    list_iterator = list_iterator->next;
+                }
         
-    //}
+            }
+        
+        }
+    
+    }
     
 }
 
+/* Divides INT_Max by num_tiers to determine min and max values for each tier */
 int linked_list2::Find_tier(int key)
 {
     int section = (2147483647/num_tiers);
