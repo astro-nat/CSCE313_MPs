@@ -81,16 +81,22 @@ void linked_list2::Insert (int k, char* data_ptr, int data_len)
                 free_pointer[i] = front_pointer[i];
             }
             else {
-                 cout << "Front pointer is NOT NULL!" << endl;
+                cout << "Front pointer is NOT NULL!" << endl;
+                front_pointer[i] = (node*)head_pointer[i];
+                free_pointer[i] = front_pointer[i];
             }
             if(free_pointer[i] != NULL) {
                 cout << "Free pointer NOT NULL" << endl;
                 free_pointer[i]->key = k;
+                std::cout << " - Key: " << free_pointer[i]->key << std::endl;
                 free_pointer[i]->payload = data_ptr;
-                free_pointer[i]->next = NULL;
+                std::cout << " - Data: " << free_pointer[i]->payload << std::endl;
+                //free_pointer[i]->next = NULL;
                 free_pointer[i] = free_pointer[i]->next;
+                //std::cout << "free: " << free_pointer[i] << std::endl;
             }
             else {
+                //std::cout << "free: " << free_pointer[i] << std::endl;
                 cout << "LIST IS FULL" << endl;
             }
         }
@@ -154,7 +160,7 @@ void linked_list2::PrintList()
 {
     
     cout << "Printing the list..." << endl;
-    if(front_pointer != NULL) {
+    /*if(front_pointer != NULL) {
         //char** tier_iterator = head_pointer;
         node* list_iterator;
         for(int i = 0; i < num_tiers; i++) {
@@ -171,10 +177,30 @@ void linked_list2::PrintList()
         
             }
         
+        }*/
+    node* list_iterator;
+    if(front_pointer != NULL) {
+        list_iterator->key = 0;
+        for(int i = 0; i < num_tiers; i++) {
+            std::cout << "Tier " << i << endl;
+            std::cout << "front: " << front_pointer[i] << endl;
+            //front_pointer[i] = (node*)head_pointer[i];
+            if(front_pointer[i] != NULL) {
+                list_iterator = front_pointer[i];
+                while(front_pointer[i] != NULL) {
+                    std::cout << "Node: " << std::endl;
+                    std::cout << " - Key: " << list_iterator->key << std::endl;
+                    std::cout << " - Data: " << list_iterator->payload << std::endl;
+                    //free_pointer[i]->next = NULL;
+                    list_iterator = list_iterator->next;
+                    //free_pointer[i] = front_pointer[i];
+                }
+                list_iterator = list_iterator->next;
+            }
+    
         }
-    
     }
-    
+
 }
 
 /* Divides INT_Max by num_tiers to determine min and max values for each tier */
