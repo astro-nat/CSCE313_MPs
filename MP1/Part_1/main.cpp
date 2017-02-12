@@ -3,16 +3,15 @@
 /* Project: CSCE-313 Machine Problem #1                                        */
 /*                                                                             */
 /* File: ./MP1/Part_1/main.cpp                                                 */
+/*                                                                             */
+/* NOTE: Input:                                                                */
+/*         > g++ -std=c++11 *.cpp -o testlist                                  */
+/*         > ./testlist -b 128 -s 1408 -t 4                                    */
 /* --------------------------------------------------------------------------- */
 
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-
-/* --------------------------------------------------------------------------- */
-/* User Defined Includes                                                       */
-/* --------------------------------------------------------------------------- */
-
 #include "linkedlist.h"
 #include <ctype.h>
 #include <unistd.h>
