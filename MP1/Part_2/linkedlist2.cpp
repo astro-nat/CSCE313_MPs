@@ -55,46 +55,46 @@ void linked_list2::Destroy()
 /* Insert an element into the list with a given key, given data element, and with a given length*/
 void linked_list2::Insert (int k, char* data_ptr, int data_len)
 {
-    std::cout << "Inserting " << k << " into list..." << std::endl;
+    //std::cout << "Inserting " << k << " into list..." << std::endl;
     if(getInitialized()) {
         int i = Find_tier(k);
-        cout << "Tier number: " << i << endl;
+        //cout << "Tier number: " << i << endl;
         if(data_len < getBlockSize()) {
             if(front_pointer[i] == NULL) {
-                cout << "Front pointer is NULL" << endl;
+                //cout << "Front pointer is NULL" << endl;
                 front_pointer[i] = (node*)head_pointer[i];
                 free_pointer[i] = front_pointer[i];
             }
             else {
-                cout << "Front pointer is NOT NULL!" << endl;
+                //cout << "Front pointer is NOT NULL!" << endl;
                 front_pointer[i] = (node*)head_pointer[i];
                 free_pointer[i] = front_pointer[i];
             }
             if(free_pointer[i] != NULL) {
-                cout << "Free pointer NOT NULL" << endl;
+                //cout << "Free pointer NOT NULL" << endl;
                 free_pointer[i]->key = k;
-                std::cout << " - Key: " << free_pointer[i]->key << std::endl;
+                //std::cout << " - Key: " << free_pointer[i]->key << std::endl;
                 free_pointer[i]->payload = data_ptr;
-                std::cout << " - Data: " << free_pointer[i]->payload << std::endl;
+                //std::cout << " - Data: " << free_pointer[i]->payload << std::endl;
                 free_pointer[i] = free_pointer[i]->next;
             }
-            else {
-                cout << "LIST IS FULL" << endl;
-            }
+            //else {
+                //cout << "LIST IS FULL" << endl;
+            //}
         }
-        else{
-            cout << "Block size not big enough" << endl;
-        }
+        //else{
+            //cout << "Block size not big enough" << endl;
+        //}
     }
 
-    cout << "Inserted into list yay" << endl << endl;
+    //cout << "Inserted into list yay" << endl << endl;
 }
 
 
 int linked_list2::Delete(int delete_key)
 {
     
-     cout << "Deleting from list..." << endl;
+     //cout << "Deleting from list..." << endl;
      node* search = front_pointer[0];
      
      int i = 0;
@@ -121,7 +121,7 @@ int linked_list2::Delete(int delete_key)
 /* otherwise, return NULL                                                           */
 struct node* linked_list2::Lookup(int lookup_key)
 {
-    cout << "Looking up a key..." << endl;
+    //cout << "Looking up a key..." << endl;
     node* search = front_pointer[0];
     
     int i = 0;
@@ -129,7 +129,7 @@ struct node* linked_list2::Lookup(int lookup_key)
         while(i < lookup_key) {
             search = front_pointer[i];
         }
-        cout << "FOUND IT" << endl;
+        //cout << "FOUND IT" << endl;
         return search;
     }
     return NULL;
@@ -143,7 +143,7 @@ void linked_list2::PrintList()
     if(front_pointer != NULL) {
         for(int i = 0; i < num_tiers; i++) {
             std::cout << "Tier " << i << endl;
-            std::cout << "front: " << front_pointer[i] << endl;
+            //std::cout << "front: " << front_pointer[i] << endl;
             if(front_pointer[i] != NULL) {
                 list_iterator = front_pointer[i];
                 while(front_pointer[i] != NULL) {
