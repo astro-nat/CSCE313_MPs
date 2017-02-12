@@ -31,7 +31,7 @@ void linked_list2::Init(int M, int b, int t)
     front_pointer = (node**)malloc(t*sizeof(node*));
     
     for(int i = 0; i < t; i++) {
-        head_pointer[i] = (char*)malloc(M/b);
+        head_pointer[i] = (char*)malloc(M/t);
         free_pointer[i] = (node*)head_pointer[i];
         front_pointer[i] = NULL;
     }
@@ -143,7 +143,7 @@ void linked_list2::PrintList()
     if(front_pointer != NULL) {
         for(int i = 0; i < num_tiers; i++) {
             std::cout << "Tier " << i << endl;
-            //std::cout << "front: " << front_pointer[i] << endl;
+
             if(front_pointer[i] != NULL) {
                 list_iterator = front_pointer[i];
                 while(front_pointer[i] != NULL) {
