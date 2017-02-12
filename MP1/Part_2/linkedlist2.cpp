@@ -143,7 +143,6 @@ void linked_list2::PrintList()
     if(front_pointer != NULL) {
         for(int i = 0; i < num_tiers; i++) {
             std::cout << "Tier " << i << endl;
-            std::cout << "front: " << front_pointer[i] << endl;
             if(front_pointer[i] != NULL) {
                 list_iterator = front_pointer[i];
                 while(front_pointer[i] != NULL) {
