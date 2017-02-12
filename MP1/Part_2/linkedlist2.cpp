@@ -15,14 +15,12 @@ linked_list2::linked_list2()
     head_pointer = NULL;
     front_pointer = NULL;
     free_pointer = NULL;
-    //free_data_pointer = NULL;
-    //cout << "Constructor called" << endl;
+    free_data_pointer = NULL;
 }
 
 // implement t
 void linked_list2::Init(int M, int b, int t)
 {
-    //cout << "Making the list homies" << endl;
     setBlockSize(b);
     setMemSize(M);
     setMaxDataSize(b);
@@ -39,21 +37,10 @@ void linked_list2::Init(int M, int b, int t)
     }
     
     setInitialized(true);
-    //cout << "Initialized aaaaw yeaaaaah" << endl;
 }
 
 void linked_list2::Destroy()
 {
-    //cout << "Destroying the list" << endl;
-    
-    /*for(int i = 0; i < num_tiers; i++) {
-        while(free_pointer[i] != NULL){
-            free_pointer[i] = free_pointer[i]->next;
-            free(free_pointer);
-            free_pointer[i] = free_pointer[i];
-        }
-    }*/
-    
     for(int i = 0; i < num_tiers; i++) {
         
         node* list_iterator = front_pointer[i];
@@ -63,8 +50,6 @@ void linked_list2::Destroy()
             list_iterator = list_iterator;
         }
     }
-    
-    //cout << "List destroyed!" << endl;
 }
 
 /* Insert an element into the list with a given key, given data element, and with a given length*/
@@ -91,12 +76,9 @@ void linked_list2::Insert (int k, char* data_ptr, int data_len)
                 std::cout << " - Key: " << free_pointer[i]->key << std::endl;
                 free_pointer[i]->payload = data_ptr;
                 std::cout << " - Data: " << free_pointer[i]->payload << std::endl;
-                //free_pointer[i]->next = NULL;
                 free_pointer[i] = free_pointer[i]->next;
-                //std::cout << "free: " << free_pointer[i] << std::endl;
             }
             else {
-                //std::cout << "free: " << free_pointer[i] << std::endl;
                 cout << "LIST IS FULL" << endl;
             }
         }
@@ -119,17 +101,17 @@ int linked_list2::Delete(int delete_key)
      if(delete_key < num_tiers){
          while(i < delete_key) {
              search = front_pointer[i];
-     }
+         }
      
-     node temp_pointer = search[0];
-     for(int i = 0; i < (mem_size/num_tiers); i++) {
-         temp_pointer = search[i];
-         temp_pointer.key = -1;
-         temp_pointer.payload = "";
-     }
+         node temp_pointer = search[0];
+         for(int i = 0; i < (mem_size/num_tiers); i++) {
+             temp_pointer = search[i];
+             temp_pointer.key = -1;
+             temp_pointer.payload = "";
+         }
          
-     cout << "IT'S GONE SUCKAS" << endl;
-     return delete_key;
+         return delete_key;
+     
      }
     
     return 0;
@@ -150,7 +132,6 @@ struct node* linked_list2::Lookup(int lookup_key)
         cout << "FOUND IT" << endl;
         return search;
     }
-    cout << "Ain't no key like that fam" << endl;
     return NULL;
     
 }
@@ -158,42 +139,18 @@ struct node* linked_list2::Lookup(int lookup_key)
 /* Prints the list by printing the key and the data of each node */
 void linked_list2::PrintList()
 {
-    
-    cout << "Printing the list..." << endl;
-    /*if(front_pointer != NULL) {
-        //char** tier_iterator = head_pointer;
-        node* list_iterator;
-        for(int i = 0; i < num_tiers; i++) {
-            std::cout << "Tier " << i << endl;
-            if(front_pointer[i] != NULL) {
-                list_iterator = front_pointer[i];
-                while(list_iterator->next != NULL) {
-                    std::cout << "Node: " << std::endl;
-                    std::cout << " - Key: " << list_iterator->key << std::endl;
-                    std::cout << " - Data: " << list_iterator->payload << std::endl;
-                    list_iterator->next = NULL;
-                    list_iterator = list_iterator->next;
-                }
-        
-            }
-        
-        }*/
     node* list_iterator;
     if(front_pointer != NULL) {
-        list_iterator->key = 0;
         for(int i = 0; i < num_tiers; i++) {
             std::cout << "Tier " << i << endl;
             std::cout << "front: " << front_pointer[i] << endl;
-            //front_pointer[i] = (node*)head_pointer[i];
             if(front_pointer[i] != NULL) {
                 list_iterator = front_pointer[i];
                 while(front_pointer[i] != NULL) {
                     std::cout << "Node: " << std::endl;
                     std::cout << " - Key: " << list_iterator->key << std::endl;
                     std::cout << " - Data: " << list_iterator->payload << std::endl;
-                    //free_pointer[i]->next = NULL;
                     list_iterator = list_iterator->next;
-                    //free_pointer[i] = front_pointer[i];
                 }
                 list_iterator = list_iterator->next;
             }
