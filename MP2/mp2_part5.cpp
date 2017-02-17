@@ -16,17 +16,17 @@
 int main()
 {
     
-    pid_t childProcess;
-    pid_t parentProcess;
+    pid_t childProcess = fork();
     int success;
     
     pid_t success_value = waitpid(-1, &success, 0);
     
-    if(fork() == 0) {
-        write(1,"World!\n",8);
+    if(childProcess == 0) {
+        write(1, "Hello ",7);
+        
     }
     else if (success_value != 0) {
-        write(1, "Hello ",7);
+        write(1,"World!\n",8);
     }
     
     exit(0);
