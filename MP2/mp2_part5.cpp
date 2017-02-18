@@ -22,7 +22,7 @@ int main()
     pid_t success_value = waitpid(-1, &success, 0);
     
     if(childProcess == 0) {
-        write(1, "Hello ",7);
+        write(1, "Hello",6);
         
     }
     else if (success_value != 0) {
