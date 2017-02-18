@@ -20,8 +20,8 @@
 
 #include <iostream>
 
-char *cmd1[] = { "/bin/ls", "-al", "/", 0 };
-char *cmd2[] = { "/usr/bin/tr", "a-z", "A-Z", "a", 0 };
+char *cmd1[] = { "/bin/ls -la", 0 };
+//char *cmd2[] = { "/usr/bin/tr [a-zA-Z0-9a]", 0 };
 
 int main()
 {
@@ -35,24 +35,33 @@ int main()
     
     pipe(fd);
     
-    if(fork() == 0) { // child
+    if(fork() == 0) { // child writes to pipe
         
-        dup2(fd[0], 0);
+        close(fd[0]);
+        
+        dup(fd[1]);
         close(fd[1]);
         
-        write(fd[1], string, 8);
+        //execl(cmd1[0],(char*)NULL);
+        
+        write(fd[1], cmd1[0], strlen(cmd1[0])+1);
+        //write(fd[1], cmd2[0], strlen(cmd2[0])+1);
+        
         
         exit(0);
     }
-    else { // parent
+    else { // parent reads from pipe
         
-        dup2(fd[1], 1);
-        close(fd[0]);
+        close(fd[1]);
+        
         nbytes = read(fd[0], readbuffer, sizeof(readbuffer));
         
-        char* const argList[] = {"la -la", NULL};
-        execvp(cmd1[0], cmd1);
-    
+        std::cout << readbuffer << std::endl;
+        execl(readbuffer, (char*)NULL);
+        write(1, readbuffer, nbytes);
+        
+        //execvp(cmd1[0],cmd1);
+        
     }
 
     exit(0);
