@@ -1,13 +1,13 @@
 /* -------------------------------------------------------------------------- */
 /* Developers: Natalie Cluck, Megan Fischer                                   */
-/* Project: CSCE-313 Machine Problem #3                                       */
+/* Project: CSCE-313 Machine Problem #2                                       */
 /*                    
 /* Implements the command pipeline ”ls -la | tr [a-zA-Z0-9] a”. 
 /*  Use any combination of
 /* fork, exec, wait, read, and write necessary to create this functionality.
 /*  Note: the parent process must be the one to output the data to the console.
 /*
-/* File: ./mp3_part7.cpp                                                      */
+/* File: ./mp2_part7.cpp                                                      */
 /* -------------------------------------------------------------------------- */
 
 /* -------------------------------------------------------------------------- */
