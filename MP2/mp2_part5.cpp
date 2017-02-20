@@ -26,7 +26,7 @@ int main()
         
     }
     else if (success_value != 0) {
-        write(1,"World!\n",8);
+        write(1,"World!",8);
     }
     
     exit(0);
