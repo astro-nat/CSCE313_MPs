@@ -43,7 +43,7 @@ class Proctest(object):
         
         self.ppid = ""
         self.euid = ""
-        self.eguid = ""
+        self.egid = ""
         self.ruid = ""
         self.rgid = ""
         self.fsuid = ""
@@ -65,7 +65,7 @@ class Proctest(object):
         self.nonvoluntary_context_switches = ""
         self.last_cpu = ""
         self.allowed_cpus = ""
-        self.temp_mem_array = []
+        self.memory_map = []
         
         
         pass
