@@ -91,7 +91,10 @@ class Proctest(object):
             self.fsgid = e.output
         
         # R, S, D, T, Z, X
-        self.state = ""
+        try:
+            self.state = check_output(getcommand(pid,"state"),shell=True)
+        except CalledProcessError as e:
+            self.state = e.output
         
         self.thread_count = ""
         self.priority = ""
