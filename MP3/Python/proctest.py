@@ -15,6 +15,7 @@
 import sys
 import re
 from subprocess import check_output, CalledProcessError
+import subprocess
 
 
 """
@@ -27,28 +28,71 @@ code for grading.  Also, delete all extra 'pass' statements.  They are
 noop instructions and only there because Python does not like empty functions.
 """
 
+def getcommand(pid,command):
+    
+    return ("ps -p " + pid + " -o " + command + "=\n")
 
 class Proctest(object):
     """
     Object to contain process data and getter functions
     """
     
-    
     def __init__(self, pid):
         
         # Read all data from pertinent files and save as class members
         
-        self.pid = pid
+        # PID
+        try:
+        	pid = pid.strip()
+        	self.pid = pid
+        except CalledProcessError as e:
+        	self.pid = e.output
         
+        # PPID
+        try:
+            self.ppid = check_output(getcommand(pid,"ppid"),shell=True)
+        except CalledProcessError as e:
+            self.ppid = e.output
+
+        # EUID
+        try:
+            self.euid = check_output(getcommand(pid,"euid"),shell=True)
+        except CalledProcessError as e:
+            self.euid = e.output
+    
+    	# EGID
+    	try:
+            self.egid = check_output(getcommand(pid,"egid"),shell=True)
+        except CalledProcessError as e:
+            self.egid = e.output
+    
+    	# RUID
+        try:
+            self.ruid = check_output(getcommand(pid,"ruid"),shell=True)
+        except CalledProcessError as e:
+            self.ruid = e.output
         
-        self.ppid = ""
-        self.euid = ""
-        self.egid = ""
-        self.ruid = ""
-        self.rgid = ""
-        self.fsuid = ""
-        self.fsgid = ""
+        # RGID
+        try:
+            self.rgid = check_output(getcommand(pid,"rgid"),shell=True)
+        except CalledProcessError as e:
+            self.rgid = e.output
+        
+        # FSUID
+        try:
+            self.fsuid = check_output(getcommand(pid,"fsuid"),shell=True)
+        except CalledProcessError as e:
+            self.fsuid = e.output
+        
+        # FSGID
+        try:
+            self.fsgid = check_output(getcommand(pid,"fsgid"),shell=True)
+        except CalledProcessError as e:
+            self.fsgid = e.output
+        
+        # R, S, D, T, Z, X
         self.state = ""
+        
         self.thread_count = ""
         self.priority = ""
         self.niceness = ""
