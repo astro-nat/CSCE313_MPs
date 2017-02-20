@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
 # --------------------------------------------------------------------------- #
-<<<<<<< HEAD
 # Developers: Natalie Cluck, Megan Fischer                                    #
 # Project: CSCE-313 Machine Problem #3                                        #
 #                                                                             #
