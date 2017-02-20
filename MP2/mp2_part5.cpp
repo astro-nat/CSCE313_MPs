@@ -1,8 +1,8 @@
 /* -------------------------------------------------------------------------- */
 /* Developers: Natalie Cluck, Megan Fischer                                   */
-/* Project: CSCE-313 Machine Problem #3                                       */
+/* Project: CSCE-313 Machine Problem #2                                       */
 /*                                                                            */
-/* File: ./mp3_part5.cpp                                                      */
+/* File: ./mp3_part2.cpp                                                      */
 /* -------------------------------------------------------------------------- */
 
 /* -------------------------------------------------------------------------- */
@@ -16,17 +16,17 @@
 int main()
 {
     
-    pid_t childProcess;
-    pid_t parentProcess;
+    pid_t childProcess = fork();
     int success;
     
     pid_t success_value = waitpid(-1, &success, 0);
     
-    if(fork() == 0) {
-        write(1,"World!\n",8);
+    if(childProcess == 0) {
+        write(1, "Hello",6);
+        
     }
     else if (success_value != 0) {
-        write(1, "Hello ",7);
+        write(1,"World!",8);
     }
     
     exit(0);

@@ -1,8 +1,13 @@
 #!/usr/bin/env python
 
 # --------------------------------------------------------------------------- #
+<<<<<<< HEAD
 # Developers: Natalie Cluck, Megan Fischer                                    #
 # Project: CSCE-313 Machine Problem #3                                        #
+=======
+# Developer: Andrew Kirfman                                                   #
+# Project: CSCE-313 Machine Problem #3                                       #
+>>>>>>> 10b252c139182fd5f3fa5c22bd84f42785c8aa87
 #                                                                             #
 # File: ./student/proctest.py                                                 #
 # --------------------------------------------------------------------------- #
