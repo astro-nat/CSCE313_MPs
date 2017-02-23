@@ -39,6 +39,7 @@ class Proctest(object):
     
     def __init__(self, pid):
         
+
         # Read all data from pertinent files and save as class members
         
         # PID
@@ -114,12 +115,29 @@ class Proctest(object):
         self.allowed_cpus = ""
         self.memory_map = []
         
+
+        pid = pid;
+        ppid = "12345";
+        euid = "23456";
         
+        """
+        Read all data from pertinent files and save as class members
+
+        Work needed here!
+        """
+
         pass
 
     def getpid(self):
         
         return self.pid
+
+        
+        """
+        Returns the process id
+
+        Work needed here!
+        """
 
 
     def getppid(self):
@@ -129,7 +147,13 @@ class Proctest(object):
 
     def geteuid(self):
         
-        return self.euid
+        return euid
+        
+        """
+        Returns the process's effective user ID
+
+        Work needed here!
+        """
 
 
     def getegid(self):
