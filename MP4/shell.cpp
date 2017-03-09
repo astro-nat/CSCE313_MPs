@@ -70,7 +70,7 @@ int main(int argc, char** argv)
         char temp[MAX_PATH];
         cout << ( getcwd(temp, MAX_PATH) ? std::string( temp ) : std::string("") ) << "$ ";
         
-        cin >> input;
+        getline(cin,input);
 
         /* Vector to maintain background processes */
 
