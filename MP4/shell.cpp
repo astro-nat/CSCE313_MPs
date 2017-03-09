@@ -37,8 +37,11 @@ using namespace std;
 const int MAX_PATH = 1000;
 
 char temp[MAX_PATH];
+
+// Use $PATH ?
 string DIR = ( getcwd(temp, MAX_PATH) ? std::string( temp ) : std::string("") );
-string PROMPT = ( DIR + "$ " );
+string PROMPT = "[" + ( DIR + "$ " );
+
 string WHO = "";
 string DATE = "";
 string TIME = "";
@@ -55,7 +58,7 @@ string TIME = "";
  */
 void update_prompt()
 {
-    
+    PROMPT = "[" + ( DIR + "$ " );
 }
 
 int main(int argc, char** argv)
@@ -64,42 +67,42 @@ int main(int argc, char** argv)
 	while(input != "q") {
         
         /* Parse command line arguments */
-        vector<string> commands;
+        
         string delimiter = " ";
+        string token;
         size_t pos = 0;
-        std::string token;
+        vector<string> backgroundProcesses;
+        vector<string> commands;
         
         /* Initialize prompt to default (current directory followed by a colon */
         update_prompt();
-        cout << DIR << "$ ";
+        cout << PROMPT;
         getline(cin,input);
         
         // !! get this to work properly. Doesn't get last argument. !!
-        /*
-        if(input.find(delimiter) != string::npos ){
+        
+        if(input.find(delimiter) != string::npos){
             while ((pos = input.find(delimiter)) != std::string::npos) {
                 token = input.substr(0, pos);
                 commands.push_back(token);
                 input.erase(0, pos + delimiter.length());
             }
+            // last argument not added in loop -> this handles that
+            token = input.substr(0, pos);
+            commands.push_back(token);
         }
         else {
+            // adds argument if there is only one
             commands.push_back(input);
         }
-        */
         
-        // testing //
-        commands.push_back("exit");
-        commands.push_back(" ");
         
+        //*  testing * //
+        //commands.push_back("ls");
+        //commands.push_back("");
         for(auto i : commands) {
             cout << "Command: " << i << endl;
         }
-         
-        
-        /* Vector to maintain background processes */
-        vector<string> backgroundProcesses;
-
         
         /* Tokenize input command */
 
@@ -107,12 +110,35 @@ int main(int argc, char** argv)
         // commands.erase(std::remove(commands.begin(), commands.end(), " "), commands.end());
 
         // Account for special commands
-        if(commands[0] == "cd") {
-            cout << "SPECIAL" << endl;
-            DIR = commands[1];
-        }
-        else if (commands[0] == "exit") {
-            exit(0);
+        if(commands.size() > 0) {
+            
+            if(commands[0] == "cd") {
+                cout << "SPECIAL" << endl;
+                
+                // TO DO: check for valid directory
+                DIR = commands[1];
+            }
+            else if (commands[0] == "exit") {
+                exit(0);
+            }
+            if(commands[1] == "|") {
+                
+            }
+            // unix_command AMP
+            if(commands[1] == "&") {
+                
+                // backgroundProcesses.push_back(<process id>);
+                
+            }
+            // unix_command REDIRECTION filename
+            if(commands[1] == "<" || "||" || ">") {
+                
+            }
+            // unix_command
+            else if (commands.size() == 1) {
+                
+            }
+            
         }
 
         // Check to see if the process is to run in the background or foreground
@@ -124,24 +150,7 @@ int main(int argc, char** argv)
         /* Detect command pipes */
         
         // unix_command PIPE unix_command
-        if(commands[1] == "|") {
-            
-        }
-        // unix_command AMP
-        if(commands[1] == "&") {
-            
-            // backgroundProcesses.push_back(<process id>);
-            
-        }
-        // unix_command REDIRECTION filename
-        if(commands[1] == "<" || "||" || ">") {
-            
-        }
-        // unix_command
-        else if (commands.size() == 1) {
-            
-        }
-
+        
         /* Set up communication pipes */
 
         /* Detect Redirection */
