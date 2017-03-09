@@ -1,6 +1,6 @@
 /* ------------------------------------------------------------------------- */
-/* Developer: Andrew Kirfman                                                 */ 
-/* Project: CSCE-313 Machine Problem #4                                              */
+/* Developers: Natalie Cluck, Megan Fischer                                  */ 
+/* Project: CSCE-313 Machine Problem #4                                      */
 /*                                                                           */
 /* File: ./shell.cpp                                                         */ 
 /* ------------------------------------------------------------------------- */
@@ -27,11 +27,14 @@
 #include<sys/stat.h>
 #include<fcntl.h>
 
+using namespace std;
+
 /* ------------------------------------------------------------------------- */
 /* Global Variables                                                          */
 /* ------------------------------------------------------------------------- */
 
 // Put any global variables here
+const int MAX_PATH = 1000;
 
 /* User Definable Custom Prompt:
  * 
@@ -50,31 +53,47 @@ void update_prompt()
 
 int main(int argc, char** argv)
 {
-	/* Parse command line arguments */
+    string input;
+	while(input != "q") {
+        /* Parse command line arguments */
+        int i = 1;
+        vector<string> commands;
+        
+        /*
+        while(i < argc) {
+            commands.push_back(argv[i]);
+            i++;
+        }
+        */
 
-	/* Initialize prompt to default (current directory followed by a colon */
+        /* Initialize prompt to default (current directory followed by a colon */
+        char temp[MAX_PATH];
+        cout << ( getcwd(temp, MAX_PATH) ? std::string( temp ) : std::string("") ) << "$ ";
+        
+        cin >> input;
 
-	/* Vector to maintain background processes */
+        /* Vector to maintain background processes */
 
-	/* Tokenize input command */
+        /* Tokenize input command */
 
-	// The tokenizer may make empty tokens, eliminate them
+        // The tokenizer may make empty tokens, eliminate them
 
-	// Account for special commands
+        // Account for special commands
 
-	// Check to see if the process is to run in the background or foreground
+        // Check to see if the process is to run in the background or foreground
 
-	/* Remove quotes from beginning and end of tokens */
+        /* Remove quotes from beginning and end of tokens */
 
-	/* Replace the string \" with the character '\"' */
+        /* Replace the string \" with the character '\"' */
 
-	/* Detect command pipes */
+        /* Detect command pipes */
 
-	/* Set up communication pipes */
+        /* Set up communication pipes */
 
-	/* Detect Redirection */
+        /* Detect Redirection */
 
-	/* Execute commands in order */
+        /* Execute commands in order */
 
+    }
 	return 0;
 }
