@@ -19,9 +19,22 @@ from subprocess import check_output, CalledProcessError, Popen
 import subprocess
 import os
 
-def getcommand(pid,command):
+
+"""
+	Note to students: Your program must be written using the provided class
+	template below.	 Functions that require your implementation are marked
+	with "Work needed here" in their method docstrings.
 	
-	return ("ps -p " + pid + " -o " + command + "=\n")
+	Be sure to delete all of these extraneous comments before submitting your
+	code for grading.  Also, delete all extra 'pass' statements.  They are
+	noop instructions and only there because Python does not like empty functions.
+	"""
+
+def getcommand(pid,command,un):
+	
+	pid = pid.strip()
+	un = un.strip()
+	return ("ps -p " + pid + " -u " + un + " -o " + command + "=\n")
 
 
 class Proctest(object):
@@ -29,74 +42,75 @@ class Proctest(object):
 		Object to contain process data and getter functions
 		"""
 	
-	def __init__(self, pid):
+	def __init__(self, pid, un):
 		
 		
 		# Read all data from pertinent files and save as class members
 		
-		# Display > cat /proc/<pid>/stat
+		# PID
 		try:
 			pid = pid.strip()
-			command = "cat /proc/" + pid + "/stat"
-			stat_array = check_output(command,shell=True).split()
+			un = un.strip()
+			#command = "cat /proc/" + pid + "/stat"
+			command = getcommand(pid,"pid",un)
+			print("Command: " + command)
+			self.pid = check_output(command,shell=True)
 		except CalledProcessError as e:
 			pid = "12345"
 		
-		# PID
-		try:
-			self.pid = stat_array[1-1] # reference to numbered count in /proc/stat reference
-		except CalledProcessError as e:
-			self.pid = e.output
-		
 		# PPID		
 		try:
-			self.ppid = stat_array[4-1].strip()
+			command = getcommand(pid,"ppid",un)
+			self.ppid = check_output(command,shell=True)
+			
 		except CalledProcessError as e:
 			self.ppid = e.output
 			
 		# EUID
 		try:
-			self.euid = check_output(getcommand(pid,"euid"),shell=True).strip()
+			self.euid = check_output(getcommand(pid,"euid",un),shell=True).strip()
 		except CalledProcessError as e:
 			self.euid = e.output
 
 
 		# EGID
 		try:
-			self.egid = check_output(getcommand(pid,"egid"),shell=True).strip()
+			self.egid = check_output(getcommand(pid,"egid",un),shell=True).strip()
 		except CalledProcessError as e:
 			self.egid = e.output
 
 
 		# RUID
 		try:
-			self.ruid = check_output(getcommand(pid,"ruid"),shell=True).strip()
+			self.ruid = check_output(getcommand(pid,"ruid",un),shell=True).strip()
 		except CalledProcessError as e:
 			self.ruid = e.output
 
 
 		# RGID
 		try:
-			self.rgid = check_output(getcommand(pid,"rgid"),shell=True).strip()
+			self.rgid = check_output(getcommand(pid,"rgid",un),shell=True).strip()
 		except CalledProcessError as e:
 			self.rgid = e.output
 
 		# FSUID
 		try:
-			self.fsuid = check_output(getcommand(pid,"fsuid"),shell=True).strip()
+			self.fsuid = check_output(getcommand(pid,"fsuid",un),shell=True).strip()
 		except CalledProcessError as e:
 			self.fsuid = e.output
 
 
 		# FSGID
 		try:
-			self.fsgid = check_output(getcommand(pid,"fsgid"),shell=True).strip()
+			self.fsgid = check_output(getcommand(pid,"fsgid",un),shell=True).strip()
 		except CalledProcessError as e:
 			self.fsgid = e.output
 
 
 		# R, S, D, T, Z, X
 		try:
+			command = ""
+			stat_array = check_output(command,shell=True).split()
 			self.state = stat_array[3-1].strip()
 		except CalledProcessError as e:
 			self.state = e.output
@@ -186,9 +200,9 @@ class Proctest(object):
 			p1 = subprocess.check_output(files_command, shell=True).split()
 			self.files = len(p1)
 		except CalledProcessError as e:
-			#print(e.output + "Number of file handles used in current process displayed instead.")
-			#p1 = subprocess.check_output("ls /proc/self/fd",shell=True).split()
-			self.files = "Permission denied"
+			print(e.output + "Number of file handles used in current process displayed instead.")
+			p1 = subprocess.check_output("ls /proc/self/fd",shell=True).split()
+			self.files = len(p1)
 		
 		
 		# voluntary context switches
@@ -231,12 +245,11 @@ class Proctest(object):
 			#maps_command = "cat test.cpp"
 			
 			p1 = subprocess.check_output(maps_command, shell=True)
-			#print("P1: " + str(p1))
 			self.memory_map.append(p1)
 		except CalledProcessError as e:
-			#print(e.output + "Memory map of current process displayed instead.")
-			#p1 = subprocess.check_output("cat /proc/self/maps",shell=True)
-			self.memory_map.append("Permission denied")
+			print(e.output + "Memory map of current process displayed instead.")
+			p1 = subprocess.check_output("cat /proc/self/maps",shell=True)
+			self.memory_map.append(p1)
 			
 		pass
 
@@ -246,6 +259,7 @@ class Proctest(object):
 	def getpid(self):
 		
 		return self.pid
+		
 		
 		"""
 			Returns the process id
@@ -390,7 +404,11 @@ def main():
 	sys.stdout.flush()
 	process_pid = sys.stdin.readline()
 	
-	process_data = Proctest(process_pid)
+	sys.stdout.write("Enter username: ")
+	sys.stdout.flush()
+	process_un = sys.stdin.readline()
+	
+	process_data = Proctest(process_pid, process_un)
 	
 	# Start printing out values
 	print ""
@@ -444,5 +462,4 @@ def main():
 
 if __name__ == "__main__":
 	main()
-
 

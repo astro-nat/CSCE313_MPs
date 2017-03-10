@@ -117,6 +117,7 @@ int main(int argc, char** argv)
                 
                 // TO DO: check for valid directory
                 DIR = commands[1];
+		// use "change dir" function
             }
             else if (commands[0] == "exit") {
                 exit(0);
