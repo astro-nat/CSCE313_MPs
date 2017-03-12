@@ -111,16 +111,65 @@ int main(int argc, char** argv)
 
         // Account for special commands
         if(commands.size() > 0) {
-            
             if(commands[0] == "cd") {
                 cout << "SPECIAL" << endl;
-                
+                //char *directory = "/tmp";
+                //int ret;
+                //ret = chdir (directory);
+                //if (ret == 0) {
+                    //DIR = ( getcwd(temp, MAX_PATH) ? std::string( temp ) : std::string("") );
+                    //PROMPT = "[" + ( DIR + "$ " );
+                //}
+                //else{
+                    //cout << "Not a vaild directory." << endl;
+                //}
                 // TO DO: check for valid directory
                 DIR = commands[1];
 		// use "change dir" function
             }
             else if (commands[0] == "exit") {
                 exit(0);
+            }
+            else if (commands[0] == "ls") {
+                int pid = fork();
+                if (pid == 0) {
+                    if (commands[1] == "-la") {
+                        if (commands[2] == "-t") {
+                            execl("/bin/ls","ls", "-la", "-t", (char*) NULL);
+                        }
+                    }
+                    if (commands[1] == "-t") {
+                        execl("/bin/ls","ls", "-t", (char*) NULL);
+                    }
+                    execl("/bin/ls","ls", (char*) NULL);
+                }
+                wait(NULL);
+                PROMPT = "[" + ( DIR + "$ " );
+            }
+            else if (commands[0] == "pwd") {
+                char cwd[1024];
+                chdir("/path/to/change/directory/to");
+                getcwd(cwd, sizeof(cwd));
+                cout << cwd << endl;
+            }
+            else if (commands[0] == "df") {
+                int pid2 = fork();
+                if (pid2 == 0) {
+                    if (commands[1] == "-h") {
+                        execl("/bin/df","df", "-h", (char*) NULL);
+                    }
+                    execl("/bin/df","df", (char*) NULL);
+                }
+                wait(NULL);
+                PROMPT = "[" + ( DIR + "$ " );
+            }
+            else if (commands[0] == "cat") {
+                int pid2 = fork();
+                if (pid2 == 0) {
+                    execl("/bin/df","df", (char*) NULL);
+                }
+                wait(NULL);
+                PROMPT = "[" + ( DIR + "$ " );
             }
             if(commands[1] == "|") {
                 
