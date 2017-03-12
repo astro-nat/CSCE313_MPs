@@ -104,7 +104,6 @@ int main(int argc, char** argv)
             cout << "Command: " << i << endl;
         }
         
-        // THIS IS ALL WRONG. Account for unix_commands = command_name PIPE command_name ARGS
         if(commands.size() > 0) {
             
             // DONE
@@ -125,7 +124,49 @@ int main(int argc, char** argv)
             else if (commands[0] == "exit") {
                 exit(0);
             }
-            else if(commands[1] == "|") {
+                
+            else if (commands[0] == "ls") {
+                int pid = fork();
+                if (pid == 0) {
+                    if (commands[1] == "-la") {
+                        if (commands[2] == "-t") {
+                            execl("/bin/ls","ls", "-la", "-t", (char*) NULL);
+                        }
+                    }
+                    if (commands[1] == "-t") {
+                        execl("/bin/ls","ls", "-t", (char*) NULL);
+                    }
+                    execl("/bin/ls","ls", (char*) NULL);
+                }
+                wait(NULL);
+                PROMPT = "[" + ( DIR + "$ " );
+            }
+            else if (commands[0] == "pwd") {
+                char cwd[1024];
+                chdir("/path/to/change/directory/to");
+                getcwd(cwd, sizeof(cwd));
+                cout << cwd << endl;
+            }
+            else if (commands[0] == "df") {
+                int pid2 = fork();
+                if (pid2 == 0) {
+                    if (commands[1] == "-h") {
+                        execl("/bin/df","df", "-h", (char*) NULL);
+                    }
+                    execl("/bin/df","df", (char*) NULL);
+                }
+                wait(NULL);
+                PROMPT = "[" + ( DIR + "$ " );
+            }
+            else if (commands[0] == "cat") {
+                int pid2 = fork();
+                if (pid2 == 0) {
+                    execl("/bin/df","df", (char*) NULL);
+                }
+                wait(NULL);
+                PROMPT = "[" + ( DIR + "$ " );
+            }
+            if(commands[1] == "|") {
                 unix_command = commands[0];
             }
             // unix_command AMP
