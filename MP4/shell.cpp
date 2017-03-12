@@ -66,20 +66,20 @@ int main(int argc, char** argv)
     string input;
 	while(input != "q") {
         
-        /* Parse command line arguments */
-        
         string delimiter = " ";
         string token;
         size_t pos = 0;
         vector<string> backgroundProcesses;
         vector<string> commands;
         
+        string unix_command;
+        string filename;
+        
         /* Initialize prompt to default (current directory followed by a colon */
         update_prompt();
         cout << PROMPT;
-        getline(cin,input);
         
-        // !! get this to work properly. Doesn't get last argument. !!
+        getline(cin,input);
         
         if(input.find(delimiter) != string::npos){
             while ((pos = input.find(delimiter)) != std::string::npos) {
@@ -104,42 +104,47 @@ int main(int argc, char** argv)
             cout << "Command: " << i << endl;
         }
         
-        /* Tokenize input command */
-
-        // The tokenizer may make empty tokens, eliminate them
-        // commands.erase(std::remove(commands.begin(), commands.end(), " "), commands.end());
-
-        // Account for special commands
+        // THIS IS ALL WRONG. Account for unix_commands = command_name PIPE command_name ARGS
         if(commands.size() > 0) {
             
+            // DONE
             if(commands[0] == "cd") {
-                cout << "SPECIAL" << endl;
                 
-                // TO DO: check for valid directory
-                DIR = commands[1];
-		// use "change dir" function
+                if (commands.size() == 1){
+                        chdir("/");
+                    }
+                else {
+                    chdir(commands[1].c_str());
+                    if (chdir(commands[1].c_str()) < 0) {
+                        cout << "Directory does not exist!\n";
+                    }
+                    DIR = ( getcwd(temp, MAX_PATH) ? std::string( temp ) : std::string("") );
+                }
             }
+            // DONE
             else if (commands[0] == "exit") {
                 exit(0);
             }
-            if(commands[1] == "|") {
-                
+            else if(commands[1] == "|") {
+                unix_command = commands[0];
             }
             // unix_command AMP
-            if(commands[1] == "&") {
-                
+            else if(commands[1] == "&") {
+                unix_command = commands[0];
                 // backgroundProcesses.push_back(<process id>);
                 
             }
             // unix_command REDIRECTION filename
-            if(commands[1] == "<" || "||" || ">") {
-                
+            else if(commands[1] == "<" || "||" || ">") {
+                unix_command = commands[0];
             }
             // unix_command
             else if (commands.size() == 1) {
-                
+                unix_command = commands[0];
             }
-            
+            else {
+                cout << "Not a valid command" << endl;
+            }
         }
 
         // Check to see if the process is to run in the background or foreground
@@ -157,7 +162,7 @@ int main(int argc, char** argv)
         /* Detect Redirection */
 
         /* Execute commands in order */
-
     }
+    
 	return 0;
 }
