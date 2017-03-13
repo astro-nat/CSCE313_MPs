@@ -97,20 +97,14 @@ int main(int argc, char** argv)
             commands.push_back(input);
         }
         
-        
         //*  testing * //
-        
         for(auto i : commands) {
             cout << "Command: " << i << endl;
         }
         
-        
-        
         if(commands.size() > 0) {
-            
             // DONE
             if(commands[0] == "cd") {
-                
                 if (commands.size() == 1){
                         chdir("/");
                     }
@@ -127,37 +121,13 @@ int main(int argc, char** argv)
             else if (commands[0] == "exit") {
                 exit(0);
             }
-            
-            // DONE
-            else if (commands[0] == "ls") {
-                int pid = fork();
-                if (pid == 0) {
-                    // DONE. 10 pts.
-                    if (commands[1] == "-la") {
-                        if (commands[2] == "-t") {
-                            execl("/bin/ls","ls", "-la", "-t", (char*) NULL);
-                        }
-                    }
-                    // DONE. 10 pts.
-                    if (commands[1] == "-t") {
-                        execl("/bin/ls","ls", "-t", (char*) NULL);
-                    }
-                    execl("/bin/ls","ls", (char*) NULL);
-                }
-                wait(NULL);
-                PROMPT = "[" + ( DIR + "$ " );
-            }
             // DONE. 10 pts.
             else if (commands[0] == "pwd") {
-                int pid2 = fork();
-                if (pid2 == 0) {
-                    if (commands[1] == "-t") {
-                        execl("/bin/pwd","pwd", "-t", (char*) NULL);
-                    }
-                    execl("/bin/pwd","pwd", (char*) NULL);
-                }
-                wait(NULL);
-
+                char cwd[1024];
+                chdir("/path/to/change/directory/to");
+                getcwd(cwd, sizeof(cwd));
+                cout << cwd << endl;
+                PROMPT = "[" + ( DIR + "$ " );
             }
             // DONE. 10 pts.
             else if (commands[0] == "df") {
@@ -170,14 +140,70 @@ int main(int argc, char** argv)
                 }
                 wait(NULL);
             }
-            else if (commands[0] == "cat") {
-                int pid2 = fork();
-                if (pid2 == 0) {
-                    execl("/bin/cat","cat", (char*) NULL);
+            // DONE
+            else if (commands[0] == "ls") {
+                int pid = fork();
+                if (pid == 0) {
+                    // DONE. 10 pts.
+                    if (commands[1] == "-la") {
+                        if (commands[2] == "-t") {
+                            execl("/bin/ls","ls", "-la", "-t", (char*) NULL);
+                        }
+                        execl("/bin/ls","ls", "-la", (char*) NULL);
+                    }
+                    // DONE. 10 pts.
+                    else if (commands[1] == "-t") {
+                        execl("/bin/ls","ls", "-t", (char*) NULL);
+                    }
+                    int fds[2];
+                    pipe(fds);
+                    pid_t pid1;
+                    pid1 = fork();
+                    // DONE. 10 pts.
+                    if (commands[1] == "-la" && commands[3] == "grep") {
+                            // child process #1
+                            if (pid1 == 0) {
+                                dup2(fds[1], 1);
+                                close(fds[0]);
+                                close(fds[1]);
+                                execl("/bin/ls","-la",(char*)NULL);
+                            }
+                            // child process #2
+                            else if (pid1 != 0) {
+                                dup2(fds[0], 0);
+                                close(fds[1]);
+                                execl("/bin/grep","temp.tar",(char*)NULL);
+                            }
+                    }
+                    // DONE. 10 pts.
+                    else if(commands[2] == "cat") {
+                        // child process #1
+                        if (pid1 == 0) {
+                            dup2(fds[1], 1);
+                            close(fds[0]);
+                            close(fds[1]);
+                            execl("/bin/ls","ls",(char*)NULL);
+                        }
+                        // child process #2
+                        else if (pid1 != 0) {
+                            dup2(fds[0], 0);
+                            close(fds[1]);
+                            execl("/bin/cat","cat",(char*)NULL);
+                        }
+                    }
+                    execl("/bin/ls","ls", (char*) NULL);
                 }
                 wait(NULL);
+                PROMPT = "[" + ( DIR + "$ " );
             }
-            
+            else if (commands[0] == "echo") {
+                
+            }
+            else {
+                cout << "Not a valid command." << endl;
+                PROMPT = "[" + ( DIR + "$ " );
+            }
+        }
             
             /*
             if(commands[1] == "|") {
@@ -198,63 +224,7 @@ int main(int argc, char** argv)
                 unix_command = commands[0];
             }
             */
-            
-            if(commands[0] == "ls") {
-                
-                int fds[2];
-                pipe(fds);
-                pid_t pid1, pid2;
-                
-                pid1 = fork();
-                
-                // Almost works. Executes ls and then ls | cat. FIX!
-                if(commands[2] == "cat") {
-                   
-                    // child process #1
-                    if (pid1 == 0) {
-                        dup2(fds[1], 1);
-                        close(fds[0]);
-                        close(fds[1]);
-                        char *const argsList[] = {"/bin/ls", NULL};
-                        execl("/bin/ls","ls",(char*)NULL);
-                        
-                        // child process #2
-                    } else if (pid1 != 0) {
-                        dup2(fds[0], 0);
-                        
-                        close(fds[1]);
-                        char *const argsList[] = {"/bin/cat", NULL};
-                        
-                        execl("/bin/cat","cat",(char*)NULL);
-                        
-                    }
-                }
-                else if(commands[1] == "-la") {
-                    
-                    if(commands[3] == "grep") {
-                        // child process #1
-                        if (pid1 == 0) {
-                            dup2(fds[1], 1);
-                            close(fds[0]);
-                            close(fds[1]);
-                            execl("/bin/ls","-la",(char*)NULL);
-                            
-                            // child process #2
-                        } else if (pid1 != 0) {
-                            dup2(fds[0], 0);
-                            
-                            close(fds[1]);
-                            execl("/bin/grep","temp.tar",(char*)NULL);
-                            
-                        }
-                    }
-                }
-            else {
-                cout << "Not a valid command" << endl;
-            }
-        }
-        }
-
+        
         // Check to see if the process is to run in the background or foreground
 
         /* Remove quotes from beginning and end of tokens */
