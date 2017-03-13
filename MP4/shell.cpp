@@ -58,6 +58,7 @@ string TIME = "";
  */
 void update_prompt()
 {
+    DIR = ( getcwd(temp, MAX_PATH) ? std::string( temp ) : std::string("") );
     PROMPT = "[" + ( DIR + "$ " );
 }
 
@@ -98,11 +99,12 @@ int main(int argc, char** argv)
         
         
         //*  testing * //
-        //commands.push_back("ls");
-        //commands.push_back("");
+        /*
         for(auto i : commands) {
             cout << "Command: " << i << endl;
         }
+        */
+        
         
         if(commands.size() > 0) {
             
@@ -113,11 +115,12 @@ int main(int argc, char** argv)
                         chdir("/");
                     }
                 else {
-                    chdir(commands[1].c_str());
                     if (chdir(commands[1].c_str()) < 0) {
                         cout << "Directory does not exist!\n";
                     }
-                    DIR = ( getcwd(temp, MAX_PATH) ? std::string( temp ) : std::string("") );
+                    else {
+                        DIR = ( getcwd(temp, MAX_PATH) ? std::string( temp ) : std::string("") );
+                    }
                 }
             }
             // DONE
@@ -142,10 +145,15 @@ int main(int argc, char** argv)
                 PROMPT = "[" + ( DIR + "$ " );
             }
             else if (commands[0] == "pwd") {
-                char cwd[1024];
-                chdir("/path/to/change/directory/to");
-                getcwd(cwd, sizeof(cwd));
-                cout << cwd << endl;
+                int pid2 = fork();
+                if (pid2 == 0) {
+                    if (commands[1] == "-t") {
+                        execl("/bin/pwd","pwd", "-t", (char*) NULL);
+                    }
+                    execl("/bin/pwd","pwd", (char*) NULL);
+                }
+                wait(NULL);
+
             }
             else if (commands[0] == "df") {
                 int pid2 = fork();
