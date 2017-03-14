@@ -263,7 +263,6 @@ int main(int argc, char** argv)
         /* Detect Redirection */
 
         /* Execute commands in order */
-    }
     
 	return 0;
 }
