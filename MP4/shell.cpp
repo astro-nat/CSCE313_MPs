@@ -200,7 +200,23 @@ int main(int argc, char** argv)
                 PROMPT = "[" + ( DIR + "$ " );
             }
             else if (commands[0] == "echo") {
-                
+                ofstream myfile;
+                myfile.open ("temp_shell.txt");
+                myfile << "Hello World";
+                myfile.close();
+                PROMPT = "[" + ( DIR + "$ " );
+            }
+            else if (commands[0] == "cat") {
+                string file_text;
+                ifstream infile;
+                infile.open ("temp_shell.txt");
+                while(!infile.eof()) // To get you all the lines.
+                {
+                    getline(infile,file_text); // Saves the line in STRING.
+                    cout<< file_text << endl; // Prints our STRING.
+                }
+                infile.close();
+                PROMPT = "[" + ( DIR + "$ " );
             }
             
             
