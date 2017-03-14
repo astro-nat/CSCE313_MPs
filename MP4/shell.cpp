@@ -26,6 +26,9 @@
 #include<sys/types.h>
 #include<sys/stat.h>
 #include<fcntl.h>
+#include <fstream>
+//#include <cerrno>
+//#include <fcntl.h>
 
 using namespace std;
 
@@ -199,10 +202,14 @@ int main(int argc, char** argv)
             else if (commands[0] == "echo") {
                 
             }
+            
+            
+            }
             else {
                 cout << "Not a valid command." << endl;
                 PROMPT = "[" + ( DIR + "$ " );
             }
+            
         }
             
             /*
