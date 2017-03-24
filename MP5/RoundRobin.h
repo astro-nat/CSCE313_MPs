@@ -19,7 +19,7 @@ class RoundRobin : Scheduler{
 private:
 	int time_quantum;
 	//used shared pointer from c++11 features
-	vector<shared_ptr<Process> > processVec;
+	vector< shared_ptr<Process> > processVec;
 public:
 	RoundRobin();
 	RoundRobin(string file, int time_quantum);

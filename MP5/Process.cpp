@@ -16,19 +16,21 @@ Process::Process() {
 //make sure set isCompleted to false
 Process::Process(int pid, int arrival_time, int cpu_burst_time) {
     isCompleted = false;
-    pid = pid;
-    arrival_time = arrival_time;
-    cpu_burst_time = cpu_burst_time;
+    this->pid = pid;
+    this->arrival_time = arrival_time;
+    this->cpu_burst_time = cpu_burst_time;
 }
 
 //Copy Construcor
 //Construct it with pid, arrival_time, cpu_burst_time, remaining_time and isCompleted
 Process::Process(const Process &p){
-    this->pid = p.pid;
+    
+	this->pid = p.pid;
     this->cpu_burst_time = p.cpu_burst_time;
     this->arrival_time = p.arrival_time;
     this->remaining_time = p.remaining_time;
     this->isCompleted = p.isCompleted;
+	
 }
 
 //Every time, When your process is runing, use this function to update 
@@ -69,11 +71,13 @@ void Process::update_remaining_time(int updated_remaining_time){
 //make sure do the assignment for pid, arrival_time, cpu_burst_time, remaining_time and isCompleted
 Process & Process::operator=(const Process & p)
 {
+	
     pid = p.pid;
     remaining_time = p.remaining_time;
     cpu_burst_time = p.cpu_burst_time;
     arrival_time = p.arrival_time;
     isCompleted = p.isCompleted;
+	
 }
 
 
