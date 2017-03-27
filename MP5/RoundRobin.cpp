@@ -15,7 +15,7 @@ Also, fill in the procesVec with shared_ptr
 Also initialize time_quantum
 */
 RoundRobin::RoundRobin(string file, int time_quantum) {
-    time_quantum = time_quantum;
+    this->time_quantum = time_quantum;
     extractProcessInfo(file);
 	for (int i = 0; i < process_info.size(); i++) {
 		processVec.push_back(shared_ptr<Process>(new Process(get<0>(process_info[i]), get<1>(process_info[i]), get<2>(process_info[i]))));
@@ -39,6 +39,42 @@ void RoundRobin::schedule_tasks() {
 	Do this part.
 	*/
 	print();
+    
+    int system_time = 0;
+    int complete_count = 0;
+    int quantum_count = 0;
+    bool all_complete = false;
+    
+    while(all_complete == false) {
+        for(int i = 0; i < processVec.size(); i++) {
+            
+            if(processVec[i]->get_arrival_time() <= system_time) {
+                quantum_count = 1;
+                while(quantum_count <= time_quantum && !processVec[i]->is_Completed()) {
+                    
+                    //cout << "Arrival time of " << processVec[i]->getPid() << ": " << processVec[i]->get_arrival_time() << endl;
+                    //cout << "System time: " << system_time << endl;
+                    
+                    cout << "System Time[" << system_time << "].........Process[PID=" << processVec[i]->getPid() << "] is Running" << endl;
+                    processVec[i]->Run(1);
+                        
+                    if(processVec[i]->is_Completed()) {
+                        cout << "System Time[" << system_time << "].........Process[PID=" << processVec[i]->getPid() << "] finished its job!" << endl;
+                        complete_count++;
+                    }
+                    
+                    quantum_count++;
+                }
+            }
+            
+            system_time++;
+            
+        }
+    
+        if(complete_count == processVec.size()) {
+            all_complete = true;
+        }
+    }
 }
 
 //Fill in the procesVec with shared_ptr
