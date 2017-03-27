@@ -28,27 +28,64 @@ void SRTF::schedule_tasks(){
     // for easier iterating
     
      vector<shared_ptr<Process>> processes;
-    /*
-    while(!SRTF_queue.empty()) {
-        processes.push_back(SRTF_queue.top());
-        SRTF_queue.pop();
+     while(!SRTF_queue.empty()) {
+         processes.push_back(SRTF_queue.top());
+         SRTF_queue.pop();
     }
-     */
     
-    int i = 0;
-    int system_time = processes[0]->get_arrival_time();
-    int smallest = 0;
+    vector<shared_ptr<Process>> current_p;
     
-    while(system_time < 50) {
+    int i, smallest = 0;
+    
+    // make this equal to smallest arrival time - 1
+    int system_time = 1;
+    
+    while(current_p.size() < processes.size()) {
         
-        
-        cout << "System Time[" << system_time << "].........Process[PID=" << processes[smallest]->getPid() << "] is Running" << endl;
-        processes[0]->Run(1);
-        if(processes[0]->is_Completed()){
-            cout << "System Time[" << system_time << "].........Process[PID=" << processes[i]->getPid() << "] finished its job!" << endl;
-        }
-            
         system_time++;
+        
+        // only looks through processes whose arrival time has arrived
+        for(int i = 0; i < processes.size(); i++) {
+            
+            if(processes[i]->get_arrival_time() == system_time) {
+                current_p.push_back(processes[i]);
+            }
+        }
+        
+        //testing
+        for(int i = 0; i < current_p.size(); i++) {
+            cout << "Arrival time of " << current_p[i]->getPid() << ": " << current_p[i]->get_arrival_time() << endl;
+            cout << "Remaining time of " << current_p[i]->getPid() << ": " << current_p[i]->get_remaining_time() << endl;
+        }
+        
+        // find process with smallest remaining time, excluding those with 0 remaining time
+        if(current_p.size() > 0) {
+            for(int i = 0; i < current_p.size(); i++) {
+                
+                cout << "Aye" << endl;
+                if(current_p[i]->get_remaining_time() < current_p[smallest]->get_remaining_time() && !current_p[i]->is_Completed()) {
+                    smallest = i;
+                    cout << "Smallest remaining time: " << current_p[smallest]->get_remaining_time() << endl;
+                }
+            }
+        }
+        
+        // if process with smallest remaining time not completed, run
+        if(!current_p[smallest]->is_Completed()){
+            //cout << "Smallest remaining time: " << current_p[smallest]->get_remaining_time() << endl;
+            current_p[smallest]->Run(1);
+            
+            cout << "System Time[" << system_time << "].........Process[PID=" << current_p[smallest]->getPid() << "] is Running" << endl;
+            
+            if(current_p[smallest]->is_Completed()){
+                cout << "System Time[" << system_time << "].........Process[PID=" << current_p[smallest]->getPid() << "] finished its job!" << endl;
+            }
+            
+        }
+        
+        
+        
+        
     }
 
     
