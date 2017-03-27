@@ -17,7 +17,42 @@ SRTF::SRTF(string file)
 }
 //scheduling implementation
 void SRTF::schedule_tasks(){
-	/*
-	Fill in this part
-	*/
+    
+   
+    for (int i = 0; i < process_info.size(); i++) {
+        SRTF_queue.push(shared_ptr<Process>(new Process(get<0>(process_info[i]), get<1>(process_info[i]), get<2>(process_info[i]))));
+    }
+    
+     printByArrivalTime();
+    
+    // for easier iterating
+    
+     vector<shared_ptr<Process>> processes;
+    /*
+    while(!SRTF_queue.empty()) {
+        processes.push_back(SRTF_queue.top());
+        SRTF_queue.pop();
+    }
+     */
+    
+    int i = 0;
+    int system_time = processes[0]->get_arrival_time();
+    int smallest = 0;
+    
+    while(system_time < 50) {
+        
+        
+        cout << "System Time[" << system_time << "].........Process[PID=" << processes[smallest]->getPid() << "] is Running" << endl;
+        processes[0]->Run(1);
+        if(processes[0]->is_Completed()){
+            cout << "System Time[" << system_time << "].........Process[PID=" << processes[i]->getPid() << "] finished its job!" << endl;
+        }
+            
+        system_time++;
+    }
+
+    
+    
+    
+    
 }
