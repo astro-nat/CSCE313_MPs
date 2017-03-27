@@ -54,18 +54,18 @@ void SRTF::schedule_tasks(){
         
         //testing
         for(int i = 0; i < current_p.size(); i++) {
-            cout << "Arrival time of " << current_p[i]->getPid() << ": " << current_p[i]->get_arrival_time() << endl;
-            cout << "Remaining time of " << current_p[i]->getPid() << ": " << current_p[i]->get_remaining_time() << endl;
+            //cout << "Arrival time of " << current_p[i]->getPid() << ": " << current_p[i]->get_arrival_time() << endl;
+            //cout << "Remaining time of " << current_p[i]->getPid() << ": " << current_p[i]->get_remaining_time() << endl;
         }
         
         // find process with smallest remaining time, excluding those with 0 remaining time
         if(current_p.size() > 0) {
             for(int i = 0; i < current_p.size(); i++) {
                 
-                cout << "Aye" << endl;
+                //cout << "Aye" << endl;
                 if(current_p[i]->get_remaining_time() < current_p[smallest]->get_remaining_time() && !current_p[i]->is_Completed()) {
                     smallest = i;
-                    cout << "Smallest remaining time: " << current_p[smallest]->get_remaining_time() << endl;
+                    //cout << "Smallest remaining time: " << current_p[smallest]->get_remaining_time() << endl;
                 }
             }
         }
