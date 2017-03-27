@@ -38,7 +38,8 @@ void RoundRobin::schedule_tasks() {
 	/*
 	Do this part.
 	*/
-	print();
+    
+	//print();
     
     int system_time = 0;
     int complete_count = 0;

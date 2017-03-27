@@ -23,7 +23,7 @@ void SRTF::schedule_tasks(){
         SRTF_queue.push(shared_ptr<Process>(new Process(get<0>(process_info[i]), get<1>(process_info[i]), get<2>(process_info[i]))));
     }
     
-     printByArrivalTime();
+     //printByArrivalTime();
     
     // for easier iterating
     
