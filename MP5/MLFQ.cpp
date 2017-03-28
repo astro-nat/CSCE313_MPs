@@ -42,6 +42,10 @@ void MLFQ::update_last_process_fcfs(Process process_to_fcfs) {
 //goal_level is the level it tries to enter
 int MLFQ::level_jump(shared_ptr<Process> p, unsigned int start_level, unsigned int pos, unsigned int goal_level) {
 	
+    if(start_level != goal_level && goal_level > start_level) {
+        upperLevels[goal_level][pos] = p;
+    }
+    
 	return 0;
 }
 
@@ -63,6 +67,12 @@ int MLFQ::level_jump(shared_ptr<Process> p, unsigned int start_level, unsigned i
 //You can use level_jump() function here based on which level the process is going to jump
 void MLFQ::degrade_process(shared_ptr<Process> p, unsigned int level, unsigned int pos) {
 	
+    if(level == 2 || level == 3) {
+        upperLevels[level-1][pos] = p;
+    }
+    else if (level == 1) {
+        lowestLevel.push(*p);
+    }
 }
 
 /*
