@@ -7,7 +7,17 @@
 //After filling in the top 3 levels, then do insertion for the fcfs level
 MLFQ::MLFQ(string file)
 {
-	
+    extractProcessInfo(file);
+    
+    // load upper levels
+    for(int i = 0; i < 3; i++) {
+        upperLevels[i].push_back(shared_ptr<Process>(new Process(get<0>(process_info[i]), get<1>(process_info[i]), get<2>(process_info[i]))));
+    }
+    
+    // load lowest level
+    for (int i = 0; i < process_info.size(); i++) {
+        lowestLevel.push(Process(get<0>(process_info[i]), get<1>(process_info[i]), get<2>(process_info[i])));
+    }
 }
 //This function is used to keep track of the process who entered the fcfs queue most recently
 //The purpose is to properly adjust the upcoming process's arrival time
