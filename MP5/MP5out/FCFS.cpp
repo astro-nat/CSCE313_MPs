@@ -34,19 +34,23 @@ void FCFS::schedule_tasks(){
     double stack_size = fcfs_queue.size();
     
     while(all_complete == false) {
-        cout << "System Time[" << system_time << "].........Process[PID=" << fcfs_queue.top().getPid() << "] is Running" << endl;
+        
+        if(fcfs_queue.top().get_arrival_time() < system_time) {
+            
+            cout << "System Time[" << system_time << "].........Process[PID=" << fcfs_queue.top().getPid() << "] is Running" << endl;
 
-        wait_times += system_time;
-        
-        Process p = fcfs_queue.top();
-        fcfs_queue.pop();
-        p.Run(1);
-        fcfs_queue.push(move(p));
-        
-        if(fcfs_queue.top().is_Completed()) {
-            cout << "System Time[" << system_time << "].........Process[PID=" << fcfs_queue.top().getPid() << "] finished its job!" << endl;
+            wait_times += system_time;
+            
+            Process p = fcfs_queue.top();
             fcfs_queue.pop();
-            response_times += system_time;
+            p.Run(1);
+            fcfs_queue.push(p);
+            
+            if(fcfs_queue.top().is_Completed()) {
+                cout << "System Time[" << system_time << "].........Process[PID=" << fcfs_queue.top().getPid() << "] finished its job!" << endl;
+                fcfs_queue.pop();
+                response_times += system_time;
+            }
         }
         
         system_time++;

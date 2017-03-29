@@ -14,7 +14,48 @@ MLFQ::MLFQ(string file)
     });
 
     // load upper levels
-    for(int i = 0; i < 3; i++) {
+    int system_time = 0;
+    for(int i = 0; i < process_info.size(); i++) {
+        
+        shared_ptr<Process> p = shared_ptr<Process>(new Process(get<0>(process_info[i]), get<1>(process_info[i]), get<2>(process_info[i])));
+        
+        if(upperLevels[0].size() != LEVEL1_CAPACITY) {
+            int quantum = 0;
+            while(quantum < LEVEL1_QUANTUM && p->get_remaining_time() != 0) {
+                upperLevels[0].push_back(p);
+                p->update_remaining_time(p->get_remaining_time() - 1);
+            }
+            degrade_process(p,2,upperLevels[1].size());
+            
+        }
+        else {
+            // drop to level 2
+            if(upperLevels[1].size() != LEVEL2_CAPACITY) {
+                int quantum = 0;
+                while(quantum < LEVEL2_QUANTUM && p->get_remaining_time() != 0) {
+                    upperLevels[1].push_back(p);
+                    p->update_remaining_time(p->get_remaining_time() - 1);
+                }
+                degrade_process(p,3,upperLevels[2].size());
+            }
+            else {
+                // drop to level 3
+                if (upperLevels[2].size() != LEVEL3_CAPACITY) {
+                    int quantum = 0;
+                    while(quantum < LEVEL3_QUANTUM) {
+                        upperLevels[2].push_back(p);
+                    }
+                }
+                else {
+                    lowestLevel.push(*p);
+                    system_time++;
+                }
+            }
+        }
+    }
+    
+    /*
+    for(int i = 0; i < LEVEL1_CAPACITY; i++) {
         upperLevels[i].push_back(shared_ptr<Process>(new Process(get<0>(process_info[i]), get<1>(process_info[i]), get<2>(process_info[i]))));
     }
     
@@ -22,6 +63,7 @@ MLFQ::MLFQ(string file)
     for (int i = 0; i < process_info.size(); i++) {
         lowestLevel.push(Process(get<0>(process_info[i]), get<1>(process_info[i]), get<2>(process_info[i])));
     }
+     */
 }
 //This function is used to keep track of the process who entered the fcfs queue most recently
 //The purpose is to properly adjust the upcoming process's arrival time
@@ -85,4 +127,16 @@ Make sure print out the timing information correctly
 */
 void MLFQ::schedule_tasks(){
 	
+    // with new process, add to Level 1 queue. If full, add to Level 2 queue. If full, add to Level 3 queue. If full, add to lowest level (infinite size).
+    
+    // when time quantum used up on given level, drop a level until it finds a spot
+    
+    for(int i = 0; i < process_info.size(); i++) {
+        //upperLevels[0].push_back(process_info[i]);
+        for(int i = 0; i < LEVEL1_QUANTUM; i++) {
+            
+            cout << "Runnin runnin runnin" << endl;
+        }
+    }
+    
 }
