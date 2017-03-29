@@ -15,7 +15,7 @@ FCFS::FCFS(string file)
 
 void FCFS::print(){
 	cout<<"pid\t"<<"  arrival time\t"<<"\tburst time:\n";
-	for(auto ele:process_info){
+	for(auto ele : process_info){
 		cout<<get<0>(ele)<<"\t"<<get<1>(ele)<<"\t"<<get<2>(ele)<<endl;
 	}
 }
@@ -25,10 +25,14 @@ void FCFS::schedule_tasks(){
 	
     int system_time = 0;
     bool all_complete = 0;
+    int wait_times = 0;
+    int response_times = 0;
+    double stack_size = fcfs_queue.size();
     
     while(all_complete == false) {
-        
         cout << "System Time[" << system_time << "].........Process[PID=" << fcfs_queue.top().getPid() << "] is Running" << endl;
+
+        wait_times += system_time;
         
         Process p = fcfs_queue.top();
         fcfs_queue.pop();
@@ -38,6 +42,7 @@ void FCFS::schedule_tasks(){
         if(fcfs_queue.top().is_Completed()) {
             cout << "System Time[" << system_time << "].........Process[PID=" << fcfs_queue.top().getPid() << "] finished its job!" << endl;
             fcfs_queue.pop();
+            response_times += system_time;
         }
         
         system_time++;
@@ -45,7 +50,18 @@ void FCFS::schedule_tasks(){
         if(fcfs_queue.empty()) {
             all_complete = true;
         }
+        
     }
+    double wait_time_sum = 0;
+    double response_time_sum = 0;
+    wait_time_sum += wait_times;
+    response_time_sum += response_times;
+    
+    cout << "wait_time_sum: " << wait_time_sum << endl;
+    cout << "response_time_sum " << response_time_sum << endl;
+    cout << "fcfs_queue.size: " << stack_size << endl;
+    cout << "Average wait time: " << wait_time_sum/stack_size << endl;
+    cout << "Average response time: " << response_time_sum/stack_size << endl;
     
 }
 

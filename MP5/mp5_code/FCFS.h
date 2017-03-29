@@ -14,8 +14,8 @@ using namespace std;
 #include "Scheduler.h"
 #include "ArrivalEarlierThan.h"
 
-//This is the First Come First Serve Class
-//It basically uses the member variable process_info from its parent Class Scheduler
+//This is the First Come Firsst Serve Class
+//It basically use the member variable process_info from its parent Class Scheduler
 //It has a priority_queue which uses arrival time as the comparing key, which follows the first in first out rule
 class FCFS : public Scheduler{	
 public:

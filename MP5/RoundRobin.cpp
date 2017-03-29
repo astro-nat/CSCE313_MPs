@@ -92,8 +92,8 @@ void RoundRobin::schedule_tasks() {
         }
     }
     
-    int wait_time_sum = 0;
-    int response_time_sum = 0;
+    double wait_time_sum = 0;
+    double response_time_sum = 0;
     for(int i = 0; i < processVec.size(); i++) {
         wait_time_sum += wait_times[i];
         response_time_sum += response_times[i];

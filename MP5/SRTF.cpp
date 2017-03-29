@@ -23,6 +23,8 @@ void SRTF::schedule_tasks(){
         SRTF_queue.push(shared_ptr<Process>(new Process(get<0>(process_info[i]), get<1>(process_info[i]), get<2>(process_info[i]))));
     }
     
+    double stack_size = SRTF_queue.size();
+    
      //printByArrivalTime();
     
     // for easier iterating
@@ -39,6 +41,8 @@ void SRTF::schedule_tasks(){
     
     // make this equal to smallest arrival time - 1
     int system_time = 1;
+    int wait_times = 0;
+    int response_times = 0;
     
     while(current_p.size() < processes.size()) {
         
@@ -76,19 +80,28 @@ void SRTF::schedule_tasks(){
             current_p[smallest]->Run(1);
             
             cout << "System Time[" << system_time << "].........Process[PID=" << current_p[smallest]->getPid() << "] is Running" << endl;
-            
+            wait_times += system_time;
+
             if(current_p[smallest]->is_Completed()){
                 cout << "System Time[" << system_time << "].........Process[PID=" << current_p[smallest]->getPid() << "] finished its job!" << endl;
+                response_times += system_time;
             }
             
         }
         
         
-        
-        
     }
 
+    double wait_time_sum = 0;
+    double response_time_sum = 0;
+    wait_time_sum += wait_times;
+    response_time_sum += response_times;
     
+    cout << "wait_time_sum: " << wait_time_sum << endl;
+    cout << "response_time_sum " << response_time_sum << endl;
+    cout << "STRF_queue.size: " << stack_size << endl;
+    cout << "Average wait time: " << wait_time_sum/stack_size << endl;
+    cout << "Average response time: " << response_time_sum/stack_size << endl;
     
     
     
