@@ -19,6 +19,7 @@ Process::Process(int pid, int arrival_time, int cpu_burst_time) {
     this->pid = pid;
     this->arrival_time = arrival_time;
     this->cpu_burst_time = cpu_burst_time;
+    this->remaining_time = cpu_burst_time;
 }
 
 //Copy Construcor
@@ -36,7 +37,14 @@ Process::Process(const Process &p){
 //Every time, When your process is runing, use this function to update 
 //the remaining time and monitor if the process is done or not
 void Process::Run(int run_time) {
-    
+    if(run_time < remaining_time) {
+        remaining_time = remaining_time - run_time;
+        isCompleted = false;
+    }
+    else {
+        remaining_time = 0;
+        isCompleted = true;
+    }
 }
 
 int Process::getPid() const {
