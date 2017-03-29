@@ -17,7 +17,12 @@ Also initialize time_quantum
 RoundRobin::RoundRobin(string file, int time_quantum) {
     this->time_quantum = time_quantum;
     extractProcessInfo(file);
-	for (int i = 0; i < process_info.size(); i++) {
+    
+    std::sort(begin(process_info), end(process_info), [](ProcessInfo const &t1, ProcessInfo const &t2) {
+        return get<1>(t1) < get<1>(t2);
+    });
+
+    for (int i = 0; i < process_info.size(); i++) {
 		processVec.push_back(shared_ptr<Process>(new Process(get<0>(process_info[i]), get<1>(process_info[i]), get<2>(process_info[i]))));
 	}
 }
@@ -108,7 +113,12 @@ void RoundRobin::schedule_tasks() {
 //And set time_quantum, or you can also use set_time_quantum function for setting quantum
 RoundRobin::RoundRobin(vector<ProcessInfo> &process_info, int time_quantum){
     time_quantum = time_quantum;
-	for (int i = 0; i < process_info.size(); i++) {
+    
+    std::sort(begin(process_info), end(process_info), [](ProcessInfo const &t1, ProcessInfo const &t2) {
+        return get<1>(t1) < get<1>(t2);
+    });
+
+    for (int i = 0; i < process_info.size(); i++) {
 		processVec.push_back(shared_ptr<Process>(new Process(get<0>(process_info[i]), get<1>(process_info[i]), get<2>(process_info[i]))));
 	}
 }

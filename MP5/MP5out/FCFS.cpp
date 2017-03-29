@@ -7,6 +7,10 @@ FCFS::FCFS(string file)
 {
     extractProcessInfo(file);
     
+    std::sort(begin(process_info), end(process_info), [](ProcessInfo const &t1, ProcessInfo const &t2) {
+        return get<1>(t1) < get<1>(t2);
+    });
+
     for (int i = 0; i < process_info.size(); i++) {
         fcfs_queue.push(Process(get<0>(process_info[i]), get<1>(process_info[i]), get<2>(process_info[i])));
     }

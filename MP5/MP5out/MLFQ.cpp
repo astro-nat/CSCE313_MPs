@@ -9,6 +9,10 @@ MLFQ::MLFQ(string file)
 {
     extractProcessInfo(file);
     
+    std::sort(begin(process_info), end(process_info), [](ProcessInfo const &t1, ProcessInfo const &t2) {
+        return get<1>(t1) < get<1>(t2);
+    });
+
     // load upper levels
     for(int i = 0; i < 3; i++) {
         upperLevels[i].push_back(shared_ptr<Process>(new Process(get<0>(process_info[i]), get<1>(process_info[i]), get<2>(process_info[i]))));
