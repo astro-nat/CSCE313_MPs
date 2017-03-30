@@ -17,9 +17,9 @@ using namespace std;
 #define LEVEL2_CAPACITY	20
 #define LEVEL3_CAPACITY	20
 
-#define LEVLE1_QUANTUM	4
-#define LEVLE2_QUANTUM	8
-#define LEVLE3_QUANTUM	16
+#define LEVEL1_QUANTUM	4
+#define LEVEL2_QUANTUM	8
+#define LEVEL3_QUANTUM	16
 
 #define FCFS_WORKLOAD	5
 

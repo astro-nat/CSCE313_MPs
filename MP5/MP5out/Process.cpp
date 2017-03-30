@@ -79,12 +79,11 @@ void Process::update_remaining_time(int updated_remaining_time){
 //make sure do the assignment for pid, arrival_time, cpu_burst_time, remaining_time and isCompleted
 Process & Process::operator=(const Process & p)
 {
-	
-    pid = p.pid;
-    remaining_time = p.remaining_time;
-    cpu_burst_time = p.cpu_burst_time;
-    arrival_time = p.arrival_time;
-    isCompleted = p.isCompleted;
+    this->pid = p.pid;
+    this->remaining_time = p.remaining_time;
+    this->cpu_burst_time = p.cpu_burst_time;
+    this->arrival_time = p.arrival_time;
+    this->isCompleted = p.isCompleted;
 	
 }
 
