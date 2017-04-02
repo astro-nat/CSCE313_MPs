@@ -124,7 +124,7 @@ int main(int argc, char** argv)
             else if (commands[0] == "exit") {
                 exit(0);
             }
-            // DONE. 10 pts.
+            // SimpleCommand2 DONE. 10 pts.
             else if (commands[0] == "pwd") {
                 char cwd[1024];
                 chdir("/path/to/change/directory/to");
@@ -132,10 +132,12 @@ int main(int argc, char** argv)
                 cout << cwd << endl;
                 PROMPT = "[" + ( DIR + "$ " );
             }
-            // DONE. 10 pts.
+        
             else if (commands[0] == "df") {
                 int pid2 = fork();
                 if (pid2 == 0) {
+                    
+                    // SimpleArguments2 DONE. 10 pts.
                     if (commands[1] == "-h") {
                         execl("/bin/df","df", "-h", (char*) NULL);
                     }
@@ -147,14 +149,16 @@ int main(int argc, char** argv)
             else if (commands[0] == "ls") {
                 int pid = fork();
                 if (pid == 0) {
-                    // DONE. 10 pts.
+                    // DONE
                     if (commands[1] == "-la") {
+                        
+                        // SimpleArguments1 DONE. 10 pts.
                         if (commands[2] == "-t") {
                             execl("/bin/ls","ls", "-la", "-t", (char*) NULL);
                         }
                         execl("/bin/ls","ls", "-la", (char*) NULL);
                     }
-                    // DONE. 10 pts.
+                    // SimpleCommand1 DONE. 10 pts.
                     else if (commands[1] == "-t") {
                         execl("/bin/ls","ls", "-t", (char*) NULL);
                     }
@@ -162,7 +166,8 @@ int main(int argc, char** argv)
                     pipe(fds);
                     pid_t pid1;
                     pid1 = fork();
-                    // DONE. 10 pts.
+                    
+                    // multipleArgs DONE. 10 pts.
                     if (commands[1] == "-la" && commands[3] == "grep") {
                             // child process #1
                             if (pid1 == 0) {
@@ -178,7 +183,7 @@ int main(int argc, char** argv)
                                 execl("/bin/grep","temp.tar",(char*)NULL);
                             }
                     }
-                    // DONE. 10 pts.
+                    // simplePipe1 DONE. 10 pts.
                     else if(commands[2] == "cat") {
                         // child process #1
                         if (pid1 == 0) {
@@ -247,22 +252,7 @@ int main(int argc, char** argv)
                 unix_command = commands[0];
             }
             */
-        
-        // Check to see if the process is to run in the background or foreground
-
-        /* Remove quotes from beginning and end of tokens */
-
-        /* Replace the string \" with the character '\"' */
-
-        /* Detect command pipes */
-        
-        // unix_command PIPE unix_command
-        
-        /* Set up communication pipes */
-
-        /* Detect Redirection */
-
-        /* Execute commands in order */
+    
     
 	return 0;
 }

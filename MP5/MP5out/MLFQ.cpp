@@ -35,6 +35,7 @@ MLFQ::MLFQ(string file)
         int quantum = 0;
         while(position != LEVEL1_CAPACITY && !p->is_Completed() && quantum < LEVEL1_QUANTUM) {
             
+            cout << "Starting level 1 load" << endl;
             upperLevels[0][position] = p;
             p->update_remaining_time(p->get_remaining_time() - 1);
             position++;
@@ -48,8 +49,10 @@ MLFQ::MLFQ(string file)
         // if level 1 capacity or quantum reached, drop to level 2
         while(upperLevels[1].size() != LEVEL1_CAPACITY && !p->is_Completed()) {
             
+            cout << "Starting level 2 load" << endl;
             int quantum = 0;
             while(quantum < LEVEL2_QUANTUM && p->get_remaining_time() != 0) {
+                
                 upperLevels[1].push_back(p);
                 p->update_remaining_time(p->get_remaining_time() - 1);
             }
@@ -60,6 +63,8 @@ MLFQ::MLFQ(string file)
         
         // if level 2 capacity or quantum reached, drop to level 3
         while(upperLevels[2].size() != LEVEL1_CAPACITY && !p->is_Completed()) {
+            
+            cout << "Starting level 3 load" << endl;
             int quantum = 0;
                 while(quantum < LEVEL2_QUANTUM && p->get_remaining_time() != 0) {
                     upperLevels[2].push_back(p);
@@ -71,6 +76,8 @@ MLFQ::MLFQ(string file)
             // if level 3 capacity or quantum eached, drop to lowest level
         
         if(!p->is_Completed()) {
+            
+            cout << "Starting lowest level load" << endl;
             lowestLevel.push(*p);
             update_last_process_fcfs(*p);
             position++;
