@@ -257,13 +257,13 @@ void* worker_thread_function(void* arg) {
         if (requestText == "quit") {
             break;
         }
-        if (requestText == "Bubbles") {
+        if (requestText == "John Smith") {
             id = 1;
         }
-        else if (requestText == "Blossom") {
+        else if (requestText == "Jane Smith") {
             id = 2;
         }
-        else if (requestText == "Buttercup") {
+        else if (requestText == "Joe Smith") {
             id = 3;
         }
         
