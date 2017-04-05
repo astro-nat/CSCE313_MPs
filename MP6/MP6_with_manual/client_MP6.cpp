@@ -56,9 +56,8 @@
 #include <pthread.h>
 
 #include "reqchannel.h"
-#include "SafeBuffer.h"
+//#include "SafeBuffer.h"
 
-using namespace std;
 /*
 	You are allowed to add a namespace declaration if you
 	think it will help, although that is discouraged as being
@@ -73,20 +72,6 @@ using namespace std;
 /*--------------------------------------------------------------------------*/
 /* DATA STRUCTURES */
 /*--------------------------------------------------------------------------*/
-
-    //defaults
-    int b = 100;	//size of bounded buffer in requests
-    int w = 5;	//num of request channels
-    int n = 10000;	//number of requests to be made by request threads.
-    string h = "localhost"; //name of server host
-    int p = 8898; //port number of server host
-    SafeBuffer *requestBuff;
-    SafeBuffer *statBuff1;
-    SafeBuffer *statBuff2;
-    SafeBuffer *statBuff3;
-    vector<int> stat1;
-    vector<int> stat2;
-    vector<int> stat3;
 
 /*
  * This is a good place to write in storage structs
@@ -215,19 +200,8 @@ void* request_thread_function(void* arg) {
 	 */
 
 	for(;;) {
-    
-        if (*((int*)arg) == 1){
-            requestBuff->push_back("John Smith");
-        }
-        else if (*((int*)arg) == 2)
-        {
-            requestBuff->push_back("Jane Smith");
-        }
-        else
-        {
-            requestBuff->push_back("Joe Smith");
-        }
-    }
+
+	}
 }
 
 void* worker_thread_function(void* arg) {
@@ -246,53 +220,8 @@ void* worker_thread_function(void* arg) {
 		whether you used "new" for it.
      */
 
-    int id = -1;
-    
-    RequestChannel chan2 = *(RequestChannel*)arg;
-    
     while(true) {
-        //cout << "entered" << endl;
-        std::string reply = "";
-        string requestText = requestBuff->retrieve_front();
-        if (requestText == "quit") {
-            break;
-        }
-        if (requestText == "Bubbles") {
-            id = 1;
-        }
-        else if (requestText == "Blossom") {
-            id = 2;
-        }
-        else if (requestText == "Buttercup") {
-            id = 3;
-        }
-        
-        if (id)
-            cout << "Request: " << requestText << endl << endl;
-        
-        if (id == 1) {
-            reply = chan2.send_request("data John Smith");
-        }
-        else if (id == 2) {
-            reply = chan2.send_request("data Jane Smith");
-        }
-        else {
-            reply = chan2.send_request("data Joe Smith");
-        }
-        
-        if (reply != ""){
-            if (id == 1) {
-                statBuff1->push_back(reply);
-            }
-            else if (id == 2) {
-                statBuff2->push_back(reply);
-            }
-            else {
-                statBuff3->push_back(reply);
-            }
-        }
-        chan2.send_request("quit");
-        //return;
+
     }
 }
 

@@ -13,7 +13,6 @@
 #include <queue>
 #include <string>
 #include <pthread.h>
-#include <mutex>
 
 class SafeBuffer {
 	/*
@@ -25,9 +24,6 @@ class SafeBuffer {
 		or std::queue, because std::vector is very inefficient when
 		being modified from the front.
 	*/
-    
-    pthread_mutex_t m;
-    std::queue<std::string> elements;
 	
 public:
     SafeBuffer();
