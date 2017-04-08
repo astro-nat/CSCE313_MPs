@@ -79,14 +79,17 @@ using namespace std;
     int w = 5;	//num of request channels
     int n = 10000;	//number of requests to be made by request threads.
     string h = "localhost"; //name of server host
-    int p = 8898; //port number of server host
-    SafeBuffer *requestBuff;
-    SafeBuffer *statBuff1;
-    SafeBuffer *statBuff2;
-    SafeBuffer *statBuff3;
+    int p = 1392; //port number of server host
+
     vector<int> stat1;
     vector<int> stat2;
     vector<int> stat3;
+
+    SafeBuffer *buff_request;
+    SafeBuffer *buff1;
+    SafeBuffer *buff2;
+    SafeBuffer *buff3;
+
 
 /*
  * This is a good place to write in storage structs
@@ -217,15 +220,15 @@ void* request_thread_function(void* arg) {
 	for(;;) {
     
         if (*((int*)arg) == 1){
-            requestBuff->push_back("John Smith");
+            buff_request->push_back("John Smith");
         }
         else if (*((int*)arg) == 2)
         {
-            requestBuff->push_back("Jane Smith");
+            buff_request->push_back("Jane Smith");
         }
         else
         {
-            requestBuff->push_back("Joe Smith");
+            buff_request->push_back("Joe Smith");
         }
     }
 }
@@ -246,52 +249,52 @@ void* worker_thread_function(void* arg) {
 		whether you used "new" for it.
      */
 
-    int id = -1;
+    int num = -1;
     
-    RequestChannel chan2 = *(RequestChannel*)arg;
+    RequestChannel channel = *(RequestChannel*)arg;
     
     while(true) {
         //cout << "entered" << endl;
-        std::string reply = "";
-        string requestText = requestBuff->retrieve_front();
-        if (requestText == "quit") {
+        std::string response = "";
+        string request_val = buff_request->retrieve_front();
+        if (request_val == "quit") {
             break;
         }
-        if (requestText == "John Smith") {
-            id = 1;
+        if (request_val == "John Smith") {
+            num = 1;
         }
-        else if (requestText == "Jane Smith") {
-            id = 2;
+        else if (request_val == "Jane Smith") {
+            num = 2;
         }
-        else if (requestText == "Joe Smith") {
-            id = 3;
+        else if (request_val == "Joe Smith") {
+            num = 3;
         }
         
-        if (id)
-            cout << "Request: " << requestText << endl << endl;
+        if (num)
+            cout << "Request: " << request_val << endl << endl;
         
-        if (id == 1) {
-            reply = chan2.send_request("data John Smith");
+        if (num == 1) {
+            response = channel.send_request("data John Smith");
         }
-        else if (id == 2) {
-            reply = chan2.send_request("data Jane Smith");
+        else if (num == 2) {
+            response = channel.send_request("data Jane Smith");
         }
         else {
-            reply = chan2.send_request("data Joe Smith");
+            response = channel.send_request("data Joe Smith");
         }
         
-        if (reply != ""){
-            if (id == 1) {
-                statBuff1->push_back(reply);
+        if (response != ""){
+            if (num == 1) {
+                buff1->push_back(response);
             }
-            else if (id == 2) {
-                statBuff2->push_back(reply);
+            else if (num == 2) {
+                buff2->push_back(response);
             }
             else {
-                statBuff3->push_back(reply);
+                buff3->push_back(response);
             }
         }
-        chan2.send_request("quit");
+        channel.send_request("quit");
         //return;
     }
 }
