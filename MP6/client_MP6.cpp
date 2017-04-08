@@ -74,12 +74,12 @@ using namespace std;
 /* DATA STRUCTURES */
 /*--------------------------------------------------------------------------*/
 
-    //defaults
-    int b = 100;	//size of bounded buffer in requests
-    int w = 5;	//num of request channels
-    int n = 10000;	//number of requests to be made by request threads.
-    string h = "localhost"; //name of server host
-    int p = 1392; //port number of server host
+    int buffer_size = 100;
+    int num_threads = 5;
+    int num_requests = 10000;
+
+    string h = "localhost";
+    int p = 1392;
 
     vector<int> stat1;
     vector<int> stat2;
@@ -254,13 +254,14 @@ void* worker_thread_function(void* arg) {
     RequestChannel channel = *(RequestChannel*)arg;
     
     while(true) {
-        //cout << "entered" << endl;
+        
         std::string response = "";
         string request_val = buff_request->retrieve_front();
+        
         if (request_val == "quit") {
             break;
         }
-        if (request_val == "John Smith") {
+        else if (request_val == "John Smith") {
             num = 1;
         }
         else if (request_val == "Jane Smith") {
@@ -294,8 +295,8 @@ void* worker_thread_function(void* arg) {
                 buff3->push_back(response);
             }
         }
+        
         channel.send_request("quit");
-        //return;
     }
 }
 
