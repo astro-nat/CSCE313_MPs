@@ -19,6 +19,7 @@
 /*--------------------------------------------------------------------------*/
 
     /* -- (none) -- */
+	#define BILLION 1000000000L
 
 /*--------------------------------------------------------------------------*/
 /* INCLUDES */
@@ -416,6 +417,13 @@ int main(int argc, char * argv[]) {
 		/* START TIMER HERE */
 		/*-------------------------------------------*/
 
+     	uint64_t diff;
+		struct timespec start, end;
+		int i;
+     	
+     	clock_gettime(CLOCK_MONOTONIC, &start);	/* mark start time */
+
+     	
         std::string s = chan->send_request("newthread");
         RequestChannel *workerChannel = new RequestChannel(s, RequestChannel::CLIENT_SIDE);
 
@@ -455,6 +463,10 @@ int main(int argc, char * argv[]) {
         /*-------------------------------------------*/
         /* END TIMER HERE   */
         /*-------------------------------------------*/
+     	clock_gettime(CLOCK_MONOTONIC, &end);	/* mark the end time */
+
+    	diff = BILLION * (end.tv_sec - start.tv_sec) + end.tv_nsec - start.tv_nsec;
+		printf("Running Time:  %llu nanoseconds\n", (long long unsigned int) diff);
 
         /*
             You may want to eventually add file output
