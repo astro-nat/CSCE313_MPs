@@ -24,7 +24,6 @@ class SafeBuffer {
 		or std::queue, because std::vector is very inefficient when
 		being modified from the front.
 	*/
-    queue elements;
 	
 public:
     SafeBuffer();
