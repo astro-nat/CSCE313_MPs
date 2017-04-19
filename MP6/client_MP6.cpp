@@ -19,6 +19,7 @@
 /*--------------------------------------------------------------------------*/
 
     /* -- (none) -- */
+	#define BILLION 1000000000L
 
 /*--------------------------------------------------------------------------*/
 /* INCLUDES */
@@ -56,8 +57,9 @@
 #include <pthread.h>
 
 #include "reqchannel.h"
-//#include "SafeBuffer.h"
+#include "SafeBuffer.h"
 
+using namespace std;
 /*
 	You are allowed to add a namespace declaration if you
 	think it will help, although that is discouraged as being
@@ -72,6 +74,23 @@
 /*--------------------------------------------------------------------------*/
 /* DATA STRUCTURES */
 /*--------------------------------------------------------------------------*/
+
+    int buffer_size = 100;
+    int num_threads = 5;
+    int num_requests = 10000;
+
+    string h = "localhost";
+    int p = 1392;
+
+    vector<int> stat1;
+    vector<int> stat2;
+    vector<int> stat3;
+
+    SafeBuffer *buff_request;
+    SafeBuffer *buff1;
+    SafeBuffer *buff2;
+    SafeBuffer *buff3;
+
 
 /*
  * This is a good place to write in storage structs
@@ -200,8 +219,19 @@ void* request_thread_function(void* arg) {
 	 */
 
 	for(;;) {
-
-	}
+    
+        if (*((int*)arg) == 1){
+            buff_request->push_back("John Smith");
+        }
+        else if (*((int*)arg) == 2)
+        {
+            buff_request->push_back("Jane Smith");
+        }
+        else
+        {
+            buff_request->push_back("Joe Smith");
+        }
+    }
 }
 
 void* worker_thread_function(void* arg) {
@@ -220,8 +250,54 @@ void* worker_thread_function(void* arg) {
 		whether you used "new" for it.
      */
 
+    int num = -1;
+    
+    RequestChannel channel = *(RequestChannel*)arg;
+    
     while(true) {
-
+        
+        std::string response = "";
+        string request_val = buff_request->retrieve_front();
+        
+        if (request_val == "quit") {
+            break;
+        }
+        else if (request_val == "John Smith") {
+            num = 1;
+        }
+        else if (request_val == "Jane Smith") {
+            num = 2;
+        }
+        else if (request_val == "Joe Smith") {
+            num = 3;
+        }
+        
+        if (num)
+            cout << "Request: " << request_val << endl << endl;
+        
+        if (num == 1) {
+            response = channel.send_request("data John Smith");
+        }
+        else if (num == 2) {
+            response = channel.send_request("data Jane Smith");
+        }
+        else {
+            response = channel.send_request("data Joe Smith");
+        }
+        
+        if (response != ""){
+            if (num == 1) {
+                buff1->push_back(response);
+            }
+            else if (num == 2) {
+                buff2->push_back(response);
+            }
+            else {
+                buff3->push_back(response);
+            }
+        }
+        
+        channel.send_request("quit");
     }
 }
 
@@ -341,6 +417,13 @@ int main(int argc, char * argv[]) {
 		/* START TIMER HERE */
 		/*-------------------------------------------*/
 
+     	uint64_t diff;
+		struct timespec start, end;
+		int i;
+     	
+     	clock_gettime(CLOCK_MONOTONIC, &start);	/* mark start time */
+
+     	
         std::string s = chan->send_request("newthread");
         RequestChannel *workerChannel = new RequestChannel(s, RequestChannel::CLIENT_SIDE);
 
@@ -380,6 +463,10 @@ int main(int argc, char * argv[]) {
         /*-------------------------------------------*/
         /* END TIMER HERE   */
         /*-------------------------------------------*/
+     	clock_gettime(CLOCK_MONOTONIC, &end);	/* mark the end time */
+
+    	diff = BILLION * (end.tv_sec - start.tv_sec) + end.tv_nsec - start.tv_nsec;
+		printf("Running Time:  %llu nanoseconds\n", (long long unsigned int) diff);
 
         /*
             You may want to eventually add file output

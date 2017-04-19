@@ -11,21 +11,22 @@
 #include <queue>
 
 SafeBuffer::SafeBuffer() {
-	
+	pthread_mutex_init(&m, NULL);
 }
 
 SafeBuffer::~SafeBuffer() {
-	
+    //delete m;
+    //delete elements;
 }
 
 int SafeBuffer::size() {
-    return 0;
+    return elements.size();
 }
 
 void SafeBuffer::push_back(std::string str) {
-	return;
+    elements.push(str);
 }
 
 std::string SafeBuffer::retrieve_front() {
-	return "";
+    elements.pop();
 }
