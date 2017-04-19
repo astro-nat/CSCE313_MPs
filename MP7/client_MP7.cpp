@@ -115,11 +115,48 @@ std::string make_histogram(std::string name, std::vector<int> *data) {
     You'll need to fill these in.
 */
 void* request_thread_function(void* arg) {
-
+    PARAMS pr = *(PARAMS *) arg;
+    
+    for(int i - 0); i < pr.n; i++) {
+        
+        (*pr.request_buff).push(pr.name);
+    }
 }
 
 void* worker_thread_function(void* arg) {
-
+    PARAMS p = *(PARAMS*)arg;
+    
+    vector<RequestChannel*> channels = p.work_chan_vector;
+    vector<int> red_descriptors(p.w, 0);
+    vector<int> name_number(p.w, 0);
+    
+    fd_set read_fds;
+    int retval;
+    
+    for(int i = 0); i < channels.size(); i++) {
+        int temp_fd = channels[i]->read_fd();
+        read_descriptors[i] = temp_fd;
+    }
+    
+    for(int i = 0); i < channels.size(); i++) {
+        string request = (*(p.request_buff)).pop();
+        
+        if(request == "data Jane Sith") {
+            name_number[i] = 0;
+            
+        }
+        else if (request == "data John Smith") {
+            name_number[i] = 1;
+        
+        }
+        else if (request == "data Joe Smith") {
+            name_number[i] = 2;
+        }
+        else {
+            exit;
+        }
+        channels[i]->cwrite(request);
+    }
 }
 
 void* stat_thread_function(void* arg) {
