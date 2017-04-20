@@ -16,12 +16,18 @@
 #include "semaphore.h"
 
 class bounded_buffer {
-	/* Internal data here */
+	
+    semaphore lock;
+    semaphore full;
+    semaphore empty;
+    int max;
+    
 public:
     bounded_buffer(int _capacity);
     void push_back(std::string str);
     std::string retrieve_front();
     int size();
+    std::queue<string> buff;
 };
 
 #endif /* bounded_buffer_h */

@@ -22,6 +22,9 @@
 /*--------------------------------------------------------------------------*/
 
 #include <pthread.h>
+#include <string>
+
+using namespace std;
 
 /*--------------------------------------------------------------------------*/
 /* DATA STRUCTURES */ 
@@ -41,24 +44,50 @@
 
 class semaphore {
 private:
-    /* -- INTERNAL DATA STRUCTURES */
+    
+    int count;
+    pthread_mutex_t mut;
+    pthread_cond_t cond;
 
 public:
 
     /* -- CONSTRUCTOR/DESTRUCTOR */
 
     semaphore(int _val) {
+        set_val(_val);
 	}
+    
+    semaphore() {
+        
+    }
 
     ~semaphore(){
+        //pthread_mutix_destroy(&mut);
+        //pthread_cond_destroy(&cond);
     }
 
     /* -- SEMAPHORE OPERATIONS */
     
+    void set_val(int _val) {
+        count = _val;
+    }
+    
     void P() {
+        pthread_mutex_lock(&mut);
+        count--;
+        if(count < 0) {
+            pthread_cond_wait(&cond, &mut);
+        }
+        pthread_mutex_unlock(&mut);
     }
 
     void V() {
+        pthread_mutex_lock(&mut);
+        count++;
+        if(count<= 0)  {
+            pthread_cond_signal(&cond);
+        }
+        pthread_mutex_unlock(&mut);
     }
 };
 
