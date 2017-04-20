@@ -22,6 +22,9 @@
 /*--------------------------------------------------------------------------*/
 
 #include <pthread.h>
+#include <string>
+
+using namespace std;
 
 /*--------------------------------------------------------------------------*/
 /* DATA STRUCTURES */ 
@@ -51,15 +54,23 @@ public:
     /* -- CONSTRUCTOR/DESTRUCTOR */
 
     semaphore(int _val) {
-        count = _val;
+        set_val(_val);
 	}
+    
+    semaphore() {
+        
+    }
 
     ~semaphore(){
-        pthread_mutix_destroy(&mut);
-        pthread_cond_destroy(&cond);
+        //pthread_mutix_destroy(&mut);
+        //pthread_cond_destroy(&cond);
     }
 
     /* -- SEMAPHORE OPERATIONS */
+    
+    void set_val(int _val) {
+        count = _val;
+    }
     
     void P() {
         pthread_mutex_lock(&mut);

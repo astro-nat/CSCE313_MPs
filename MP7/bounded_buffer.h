@@ -27,6 +27,7 @@ public:
     void push_back(std::string str);
     std::string retrieve_front();
     int size();
+    std::queue<string> buff;
 };
 
 #endif /* bounded_buffer_h */

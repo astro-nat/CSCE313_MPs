@@ -7,6 +7,7 @@
 //
 
 #include "bounded_buffer.h"
+#include "semaphore.h"
 #include <string>
 #include <queue>
 
