@@ -29,6 +29,28 @@
 */
 /*--------------------------------------------------------------------------*/
 
+#include <queue>
+#include <cassert>
+#include <cstring>
+#include <iostream>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <errno.h>
+#include <unistd.h>
+#include <pthread.h>
+#include <string>
+#include <sstream>
+#include <sys/time.h>
+#include <assert.h>
+#include <fstream>
+#include <numeric>
+#include <vector>
+#include "bounded_buffer.h"
+#include "reqchannel.h"
+#include <signal.h>
+#include <stdio.h>
+
+/*
 #include <cassert>
 #include <cstring>
 #include <iostream>
@@ -45,7 +67,7 @@
 #include <numeric>
 #include <vector>
 #include "reqchannel.h"
-
+*/
 using namespace std;
 
 /*
@@ -179,10 +201,108 @@ void* worker_thread_function(void* arg) {
         }
         channels[i]->cwrite(request);
     }
+    
+    int sent_requests = p.w;
+    int recieved_requests = 0;
+    
+    //printf("[%s] %d\n", __FUNCTION__, __LINE__);
+    
+    //retrieve data from the buffer and send them to the server and receive reply
+    while(recieved_requests < (3 * p.n)) {
+        
+        //printf("[%s] %d\n", __FUNCTION__, __LINE__);
+        FD_ZERO(&read_fds);
+        for(int i = 0; i < read_descriptors.size(); i++)  {
+            FD_SET(read_descriptors[i], &read_fds); //watch a file to see when it has input to read
+        }
+        
+        //get max
+        int temp_max = read_descriptors[0];
+        for(int i = 1; i < read_descriptors.size(); i++)  {
+            if(read_descriptors[i] > temp_max)	temp_max = read_descriptors[i];
+        }
+        
+        fd_set temp_set = read_fds;
+        retval = select(temp_max + 1, &temp_set, NULL, NULL, NULL);
+        
+        //printf("[%s] %d\n", __FUNCTION__, __LINE__);
+        //use name_number and location of channel in vector to determine what persons data we have
+        std::string resp;
+        std::string next_req;
+        
+        for(int i = 0; i < read_descriptors.size(); i++){
+            //printf("[%s] %d\n", __FUNCTION__, __LINE__);
+            if(FD_ISSET(read_descriptors[i], &read_fds)){ //if ready to read from channel i
+                //printf("[%s] %d\n", __FUNCTION__, __LINE__);
+                resp = channels[i]->cread();
+                
+                recieved_requests += 1;
+                
+                if(name_number[i] == 0){ //Jane
+                    (*p.jane_response).push_back(resp);
+                }
+                else if(name_number[i] == 1){ //John
+                    (*p.john_response).push_back(resp);
+                }
+                else if(name_number[i] == 2){ //Joe
+                    (*p.joe_response).push_back(resp);
+                }
+                else printf("ERROR :(");
+                if(sent_requests < 3*(p.n))  {
+                    
+                    
+                    next_req = (*(p.request_buff)).retrieve_front();
+                    
+                    channels[i]->cwrite(next_req);
+                    
+                    sent_requests += 1;
+                    
+                    if(next_req == "data Jane Smith")  {
+                        name_number[i] = 0; //sent request to channel i for jane
+                    }
+                    else if(next_req == "data John Smith")  {
+                        name_number[i] = 1; //sent request to channel i for john
+                    }
+                    else if(next_req == "data Joe Smith")  {
+                        name_number[i] = 2; //sent request to channel i for joe
+                    }
+                    else  {
+                        printf("Data was not recognized\n");
+                        exit;
+                    }
+                }
+            }
+        }
+    }
+    
+    for(int i = 0; i < channels.size(); ++i) { //push quits onto request_buffer
+        channels[i]->send_request("quit");
+    }
 }
 
 void* stat_thread_function(void* arg) {
-
+    PARAMS_request* p = (PARAMS_request*)arg;
+    int k = 0;
+    while(true){
+        if(p->response_index == 0)  {
+            std::string response = (*(p->john_response)).retrieve_front();
+            (*(p->john_count)).at(stoi(response) / 10) += 1;
+        }
+        else if(p->response_index == 1)  {
+            std::string response = (*(p->jane_response)).retrieve_front();
+            (*(p->jane_count)).at(stoi(response) / 10) += 1;
+        }
+        else{
+            std::string response = (*(p->joe_response)).retrieve_front();
+            (*(p->joe_count)).at(stoi(response) / 10) += 1;
+        }
+        ++k;
+        if(k > (p->n)-1)  {
+            break;
+            
+        } 
+        p->results = make_histogram(p->name, p->count_vectors[p->response_index]);
+    }
 }
 
 /*--------------------------------------------------------------------------*/
@@ -265,14 +385,13 @@ int main(int argc, char * argv[]) {
         bounded_buffer joe_response(200);
         
         //start timer
-        //gettimeofday(&start_time, NULL);
+        gettimeofday(&start_time, NULL);
         
         //create all our threads
         pthread_mutex_init(&lock, NULL);
         fflush(NULL);
         pthread_t all_threads[3+1+3+1]; //3 request threads, 1 worker thread, 3 statistics threads, 1 quit thread (all in parallel)
         //we aren't currently using quit thread
-        //printf("[%s] %d\n", __FUNCTION__, __LINE__);
         
         
         ///////////////////////////////
@@ -308,8 +427,6 @@ int main(int argc, char * argv[]) {
         p1.l = &lock;
         PARAMS_request* p1_ptr = &p1;
         pthread_create(&all_threads[1], NULL, &request_thread_function, p1_ptr);
-        
-        //printf("[%s] %d\n", __FUNCTION__, __LINE__);
         
         //////////////////////////////
         // Deal WIth Worker Thread //
