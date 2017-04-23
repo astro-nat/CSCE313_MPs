@@ -18,6 +18,10 @@ bounded_buffer::bounded_buffer(int _capacity) {
     lock.set_val(1);
 }
 
+bounded_buffer::~bounded_buffer(){
+    
+}
+
 void bounded_buffer::push_back(std::string req) {
     empty.P();
     lock.P();

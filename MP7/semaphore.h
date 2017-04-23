@@ -23,6 +23,7 @@
 
 #include <pthread.h>
 #include <string>
+#include <iostream>
 
 using namespace std;
 
@@ -58,12 +59,13 @@ public:
 	}
     
     semaphore() {
-        
+        pthread_mutex_init(&mut, NULL);
+        pthread_cond_init(&cond, NULL);
     }
 
     ~semaphore(){
-        //pthread_mutix_destroy(&mut);
-        //pthread_cond_destroy(&cond);
+		pthread_mutex_destroy(&mut);
+		pthread_cond_destroy(&cond);
     }
 
     /* -- SEMAPHORE OPERATIONS */

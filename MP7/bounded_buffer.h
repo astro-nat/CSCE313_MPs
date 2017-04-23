@@ -24,6 +24,7 @@ class bounded_buffer {
     
 public:
     bounded_buffer(int _capacity);
+    ~bounded_buffer();
     void push_back(std::string str);
     std::string retrieve_front();
     int size();

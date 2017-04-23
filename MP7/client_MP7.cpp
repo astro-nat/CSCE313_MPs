@@ -1,32 +1,32 @@
 /*
-    File: client.cpp
-
-    Author: J. Higginbotham
-    Department of Computer Science
-    Texas A&M University
-    Date  : 2016/05/21
-
-    Based on original code by: Dr. R. Bettati, PhD
-    Department of Computer Science
-    Texas A&M University
-    Date  : 2013/01/31
+ File: client.cpp
+ 
+ Author: J. Higginbotham
+ Department of Computer Science
+ Texas A&M University
+ Date  : 2016/05/21
+ 
+ Based on original code by: Dr. R. Bettati, PhD
+ Department of Computer Science
+ Texas A&M University
+ Date  : 2013/01/31
  */
 
 /*--------------------------------------------------------------------------*/
 /* DEFINES */
 /*--------------------------------------------------------------------------*/
 
-    /* -- (none) -- */
-    /* -- This might be a good place to put the size of
-        of the patient response buffers -- */
+/* -- (none) -- */
+/* -- This might be a good place to put the size of
+ of the patient response buffers -- */
 
 /*--------------------------------------------------------------------------*/
 /* INCLUDES */
 /*
-    No additional includes are required
-    to complete the assignment, but you're welcome to use
-    any that you think would help.
-*/
+ No additional includes are required
+ to complete the assignment, but you're welcome to use
+ any that you think would help.
+ */
 /*--------------------------------------------------------------------------*/
 
 #include <queue>
@@ -50,29 +50,11 @@
 #include <signal.h>
 #include <stdio.h>
 
-/*
-#include <cassert>
-#include <cstring>
-#include <iostream>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <errno.h>
-#include <unistd.h>
-#include <pthread.h>
-#include <string>
-#include <sstream>
-#include <sys/time.h>
-#include <assert.h>
-#include <fstream>
-#include <numeric>
-#include <vector>
-#include "reqchannel.h"
-*/
 using namespace std;
 
 /*
-    This next file will need to be written from scratch, along with
-    semaphore.h and (if you choose) their corresponding .cpp files.
+ This next file will need to be written from scratch, along with
+ semaphore.h and (if you choose) their corresponding .cpp files.
  */
 
 #include "bounded_buffer.h"
@@ -82,55 +64,50 @@ using namespace std;
 /*--------------------------------------------------------------------------*/
 
 /*
-    All *_params structs are optional,
-    but they might help.
+ All *_params structs are optional,
+ but they might help.
  */
-struct PARAMS_request {
-    int n; //total number of requests per person
+struct PARAMS_request{
+    int n;
     int w;
-    string name; //name of person sending requests
-    void* arg; //not sure what this is
-    std::vector<RequestChannel*> work_chan_vector;
-    RequestChannel* work_chan;
-    bounded_buffer* request_buff;
-    std::vector<std::vector<int>*> count_vectors = std::vector<std::vector<int>*>(3); // 0. john, 1. jane, 2. joe
-    int response_index;
-    //std::vector<bounded_buffer*> *r_buffers; // 0. john, 1. jane, 2. joe
+    string name;
+    void* arg;
     
-    bounded_buffer *john_response;
-    bounded_buffer *jane_response;
-    bounded_buffer *joe_response;
+    vector<RequestChannel*> work_channel_vector;
+    RequestChannel* work_channel;
+    bounded_buffer* request_buffer;
     
-    std::vector<int> *john_count;
-    std::vector<int> *jane_count;
-    std::vector<int> *joe_count;
+    vector<vector<int>*> vector_numbers = vector<vector<int>*>(3);
+    int results_index;
+    
+    bounded_buffer *results_john;
+    bounded_buffer *results_jane;
+    bounded_buffer *results_joe;
+    
+    vector<int> *count_john;
+    vector<int> *count_jane;
+    vector<int> *count_joe;
     
     pthread_mutex_t* l;
-    std::string results;
-};
-
-struct PARAMS_WORKER {
-
-};
-
-struct PARAMS_STAT {
-
+    string results;
 };
 
 /*
-    This class can be used to write to standard output
-    in a multithreaded environment. It's primary purpose
-    is printing debug messages while multiple threads
-    are in execution.
+ This class can be used to write to standard output
+ in a multithreaded environment. It's primary purpose
+ is printing debug messages while multiple threads
+ are in execution.
  */
-class atomic_standard_output {
+class atomic_standard_output{
     pthread_mutex_t console_lock;
+    
 public:
-    atomic_standard_output() { pthread_mutex_init(&console_lock, NULL); }
-    ~atomic_standard_output() { pthread_mutex_destroy(&console_lock); }
-    void print(std::string s){
+    atomic_standard_output(){ pthread_mutex_init(&console_lock, NULL); }
+    ~atomic_standard_output(){ pthread_mutex_destroy(&console_lock); }
+    
+    void print(string s){
         pthread_mutex_lock(&console_lock);
-        std::cout << s << std::endl;
+        cout << s << endl;
         pthread_mutex_unlock(&console_lock);
     }
 };
@@ -141,133 +118,124 @@ atomic_standard_output threadsafe_standard_output;
 /* CONSTANTS */
 /*--------------------------------------------------------------------------*/
 
-    /* -- (none) -- */
+/* -- (none) -- */
 
 /*--------------------------------------------------------------------------*/
 /* HELPER FUNCTIONS */
 /*--------------------------------------------------------------------------*/
-
-std::string make_histogram(std::string name, std::vector<int> *data) {
-    std::string results = "Frequency count for " + name + ":\n";
-    for(int i = 0; i < data->size(); ++i) {
-        results += std::to_string(i * 10) + "-" + std::to_string((i * 10) + 9) + ": " + std::to_string(data->at(i)) + "\n";
+string make_histogram(string name, vector<int> *data){
+    string results = "Frequency count for " + name + ":\n";
+    for(int i = 0; i < data->size(); ++i){
+        results += to_string(i * 10) + "-" + to_string((i * 10) + 9) + ": " + to_string(data->at(i)) + "\n";
     }
+    
     return results;
+    
 }
 
 /*
-    You'll need to fill these in.
-*/
-void* request_thread_function(void* arg) {
-    PARAMS_request pr = *(PARAMS_request *) arg;
-    
-    for(int i = 0; i < pr.n; i++) {
-        
-        (*pr.request_buff).push_back(pr.name);
+ You'll need to fill these in.
+ */
+void* request_thread_function(void* arg){
+    PARAMS_request p_request = *(PARAMS_request *) arg;
+    for(int i = 0; i < p_request.n; i++){
+        (*p_request.request_buffer).push_back(p_request.name);
     }
 }
 
-void* worker_thread_function(void* arg) {
+void* worker_thread_function(void* arg){
     PARAMS_request p = *(PARAMS_request*)arg;
     
-    vector<RequestChannel*> channels = p.work_chan_vector;
-    vector<int> read_descriptors(p.w, 0);
-    vector<int> name_number(p.w, 0);
+    vector<RequestChannel*> channels = p.work_channel_vector;
+    vector<int> read_vector(p.w, 0);
+    vector<int> name_vector(p.w, 0);
     
     fd_set read_fds;
-    int retval;
+    int return_value;
     
-    for(int i = 0; i < channels.size(); i++) {
-        int temp_fd = channels[i]->read_fd();
-        read_descriptors[i] = temp_fd;
+    for(int i = 0; i < channels.size(); i++){
+        int temporary_fd = channels[i]->read_fd();
+        read_vector[i] = temporary_fd;
     }
     
-    for(int i = 0; i < channels.size(); i++) {
-        string request = (*(p.request_buff)).retrieve_front();
+    for(int i = 0; i < channels.size(); i++){
+        string request = (*(p.request_buffer)).retrieve_front();
+        if(request == "data Jane Smith"){
+            name_vector[i] = 0;
+        }
         
-        if(request == "data Jane Sith") {
-            name_number[i] = 0;
-            
+        else if (request == "data John Smith"){
+            name_vector[i] = 1;
         }
-        else if (request == "data John Smith") {
-            name_number[i] = 1;
         
+        else if (request == "data Joe Smith"){
+            name_vector[i] = 2;
         }
-        else if (request == "data Joe Smith") {
-            name_number[i] = 2;
-        }
-        else {
+        
+        else{
             exit;
         }
+        
         channels[i]->cwrite(request);
+        
     }
     
-    int sent_requests = p.w;
-    int recieved_requests = 0;
+    int requests_sent = p.w;
+    int requests_recieved = 0;
     
-    //printf("[%s] %d\n", __FUNCTION__, __LINE__);
-    
-    //retrieve data from the buffer and send them to the server and receive reply
-    while(recieved_requests < (3 * p.n)) {
-        
-        //printf("[%s] %d\n", __FUNCTION__, __LINE__);
+    while(requests_recieved < (3 * p.n)){
         FD_ZERO(&read_fds);
-        for(int i = 0; i < read_descriptors.size(); i++)  {
-            FD_SET(read_descriptors[i], &read_fds); //watch a file to see when it has input to read
+        for(int i = 0; i < read_vector.size(); i++){
+            FD_SET(read_vector[i], &read_fds);
         }
         
-        //get max
-        int temp_max = read_descriptors[0];
-        for(int i = 1; i < read_descriptors.size(); i++)  {
-            if(read_descriptors[i] > temp_max)	temp_max = read_descriptors[i];
+        int temp_max = read_vector[0];
+        for(int i = 1; i < read_vector.size(); i++){
+            if(read_vector[i] > temp_max)	temp_max = read_vector[i];
         }
         
         fd_set temp_set = read_fds;
-        retval = select(temp_max + 1, &temp_set, NULL, NULL, NULL);
+        return_value = select(temp_max + 1, &temp_set, NULL, NULL, NULL);
         
-        //printf("[%s] %d\n", __FUNCTION__, __LINE__);
-        //use name_number and location of channel in vector to determine what persons data we have
-        std::string resp;
-        std::string next_req;
+        string resp;
+        string next_req;
         
-        for(int i = 0; i < read_descriptors.size(); i++){
-            //printf("[%s] %d\n", __FUNCTION__, __LINE__);
-            if(FD_ISSET(read_descriptors[i], &read_fds)){ //if ready to read from channel i
-                //printf("[%s] %d\n", __FUNCTION__, __LINE__);
+        for(int i = 0; i < read_vector.size(); i++){
+            if(FD_ISSET(read_vector[i], &read_fds)){
                 resp = channels[i]->cread();
+                requests_recieved += 1;
+                if(name_vector[i] == 0){
+                    (*p.results_jane).push_back(resp);
+                }
                 
-                recieved_requests += 1;
+                else if(name_vector[i] == 1){
+                    (*p.results_john).push_back(resp);
+                }
                 
-                if(name_number[i] == 0){ //Jane
-                    (*p.jane_response).push_back(resp);
+                else if(name_vector[i] == 2){
+                    (*p.results_joe).push_back(resp);
                 }
-                else if(name_number[i] == 1){ //John
-                    (*p.john_response).push_back(resp);
-                }
-                else if(name_number[i] == 2){ //Joe
-                    (*p.joe_response).push_back(resp);
-                }
+                
                 else printf("ERROR :(");
-                if(sent_requests < 3*(p.n))  {
-                    
-                    
-                    next_req = (*(p.request_buff)).retrieve_front();
-                    
+                
+                if(requests_sent < 3*(p.n)){
+                    next_req = (*(p.request_buffer)).retrieve_front();
                     channels[i]->cwrite(next_req);
+                    requests_sent += 1;
+                    if(next_req == "data Jane Smith"){
+                        name_vector[i] = 0;
+                    }
                     
-                    sent_requests += 1;
+                    else if(next_req == "data John Smith"){
+                        name_vector[i] = 1;
+                    }
                     
-                    if(next_req == "data Jane Smith")  {
-                        name_number[i] = 0; //sent request to channel i for jane
+                    else if(next_req == "data Joe Smith"){
+                        name_vector[i] = 2;
                     }
-                    else if(next_req == "data John Smith")  {
-                        name_number[i] = 1; //sent request to channel i for john
-                    }
-                    else if(next_req == "data Joe Smith")  {
-                        name_number[i] = 2; //sent request to channel i for joe
-                    }
-                    else  {
-                        printf("Data was not recognized\n");
+                    
+                    else{
+                        printf("Can't read data.\n");
                         exit;
                     }
                 }
@@ -275,48 +243,51 @@ void* worker_thread_function(void* arg) {
         }
     }
     
-    for(int i = 0; i < channels.size(); ++i) { //push quits onto request_buffer
+    for(int i = 0; i < channels.size(); ++i){
         channels[i]->send_request("quit");
     }
 }
 
-void* stat_thread_function(void* arg) {
+void* stat_thread_function(void* arg){
     PARAMS_request* p = (PARAMS_request*)arg;
-    int k = 0;
+    int j = 0;
     while(true){
-        if(p->response_index == 0)  {
-            std::string response = (*(p->john_response)).retrieve_front();
-            (*(p->john_count)).at(stoi(response) / 10) += 1;
+        if(p->results_index == 0){
+            string response = (*(p->results_john)).retrieve_front();
+            (*(p->count_john)).at(stoi(response) / 10) += 1;
         }
-        else if(p->response_index == 1)  {
-            std::string response = (*(p->jane_response)).retrieve_front();
-            (*(p->jane_count)).at(stoi(response) / 10) += 1;
+        
+        else if(p->results_index == 1){
+            string response = (*(p->results_jane)).retrieve_front();
+            (*(p->count_jane)).at(stoi(response) / 10) += 1;
         }
+        
         else{
-            std::string response = (*(p->joe_response)).retrieve_front();
-            (*(p->joe_count)).at(stoi(response) / 10) += 1;
+            string response = (*(p->results_joe)).retrieve_front();
+            (*(p->count_joe)).at(stoi(response) / 10) += 1;
         }
-        ++k;
-        if(k > (p->n)-1)  {
+        
+        ++j;
+        if(j > (p->n)-1){
             break;
-            
-        } 
-        p->results = make_histogram(p->name, p->count_vectors[p->response_index]);
+        }
+        
+        p->results = make_histogram(p->name, p->vector_numbers[p->results_index]);
+        
     }
 }
 
 /*--------------------------------------------------------------------------*/
 /* MAIN FUNCTION */
 /*--------------------------------------------------------------------------*/
-
-int main(int argc, char * argv[]) {
+int main(int argc, char * argv[]){
     int n = 10; //default number of requests per "patient"
-    int b = 50; //default size of request_buffer
+    int b = 50; //default size of request_bufferer
     int w = 10; //default number of worker threads
     bool USE_ALTERNATE_FILE_OUTPUT = false;
     int opt = 0;
-    while ((opt = getopt(argc, argv, "n:b:w:m:h")) != -1) {
-        switch (opt) {
+    while ((opt = getopt(argc, argv, "n:b:w:m:h")) != -1){
+        switch (opt){
             case 'n':
                 n = atoi(optarg);
                 break;
@@ -331,81 +302,72 @@ int main(int argc, char * argv[]) {
                 break;
             case 'h':
             default:
-                std::cout << "This program can be invoked with the following flags:" << std::endl;
-                std::cout << "-n [int]: number of requests per patient" << std::endl;
-                std::cout << "-b [int]: size of request buffer" << std::endl;
-                std::cout << "-w [int]: number of worker threads" << std::endl;
-                std::cout << "-m 2: use output2.txt instead of output.txt for all file output" << std::endl;
-                std::cout << "-h: print this message and quit" << std::endl;
-                std::cout << "Example: ./client_solution -n 10000 -b 50 -w 120 -m 2" << std::endl;
-                std::cout << "If a given flag is not used, a default value will be given" << std::endl;
-                std::cout << "to its corresponding variable. If an illegal option is detected," << std::endl;
-                std::cout << "behavior is the same as using the -h flag." << std::endl;
+                cout << "This program can be invoked with the following flags:" << endl;
+                cout << "-n [int]: number of requests per patient" << endl;
+                cout << "-b [int]: size of request buffer" << endl;
+                cout << "-w [int]: number of worker threads" << endl;
+                cout << "-m 2: use output2.txt instead of output.txt for all file output" << endl;
+                cout << "-h: print this message and quit" << endl;
+                cout << "Example: ./client_solution -n 10000 -b 50 -w 120 -m 2" << endl;
+                cout << "If a given flag is not used, a default value will be given" << endl;
+                cout << "to its corresponding variable. If an illegal option is detected," << endl;
+                cout << "behavior is the same as using the -h flag." << endl;
                 exit(0);
         }
     }
-
+    
     int pid = fork();
-	if (pid > 0) {
+    if (pid > 0){
         struct timeval start_time;
         struct timeval finish_time;
         int64_t start_usecs;
         int64_t finish_usecs;
-        std::ofstream ofs;
-        if(USE_ALTERNATE_FILE_OUTPUT) ofs.open("output2.txt", std::ios::out | std::ios::app);
-        else ofs.open("output.txt", std::ios::out | std::ios::app);
-
-        std::cout << "n == " << n << std::endl;
-        std::cout << "b == " << b << std::endl;
-        std::cout << "w == " << w << std::endl;
-
-        std::cout << "CLIENT STARTED:" << std::endl;
-        std::cout << "Establishing control channel... " << std::flush;
+        ofstream ofs;
+        if(USE_ALTERNATE_FILE_OUTPUT) ofs.open("output2.txt", ios::out | ios::app);
+        else ofs.open("output.txt", ios::out | ios::app);
+        
+        cout << "n == " << n << endl;
+        cout << "b == " << b << endl;
+        cout << "w == " << w << endl;
+        
+        cout << "CLIENT STARTED:" << endl;
+        cout << "Establishing control channel... " << flush;
         RequestChannel *chan = new RequestChannel("control", RequestChannel::CLIENT_SIDE);
-        std::cout << "done." << std::endl;
-
+        cout << "done." << endl;
+        
         /*
-            This time you're up a creek.
-            What goes in this section of the code?
-            Hint: it looks a bit like what went here
-            in MP7, but only a *little* bit.
+         This time you're up a creek.
+         What goes in this section of the code?
+         Hint: it looks a bit like what went here
+         in MP7, but only a *little* bit.
          */
         
-        // beginning of Nat additions
-        
-        //initialize lock and necessary buffers
         pthread_mutex_t lock;
-        bounded_buffer request_buff(b); //b is max size of the request buffer
-        std::vector<int> john_frequency_count(10, 0);
-        std::vector<int> jane_frequency_count(10, 0);
-        std::vector<int> joe_frequency_count(10, 0);
+        bounded_buffer request_buffer(b);
         
-        bounded_buffer john_response(200); //"patient response buffers can be of an arbitrary fixed size"
-        bounded_buffer jane_response(200);
-        bounded_buffer joe_response(200);
+        vector<int> frequency_john(10, 0);
+        vector<int> frequency_jane(10, 0);
+        vector<int> frequency_joe(10, 0);
         
-        //start timer
+        bounded_buffer results_john(200);
+        bounded_buffer results_jane(200);
+        bounded_buffer results_joe(200);
+        
         gettimeofday(&start_time, NULL);
         
-        //create all our threads
         pthread_mutex_init(&lock, NULL);
         fflush(NULL);
-        pthread_t all_threads[3+1+3+1]; //3 request threads, 1 worker thread, 3 statistics threads, 1 quit thread (all in parallel)
-        //we aren't currently using quit thread
+        pthread_t all_threads[3+1+3+1];
         
-        
-        ///////////////////////////////
-        // Deal WIth Request Threads //
-        ///////////////////////////////
-        string John_l = "data John Smith";
-        string Jane_l = "data Jane Smith";
-        string Joe_l = "data Joe Smith";
+        string John_name = "data John Smith";
+        string Jane_name = "data Jane Smith";
+        string Joe_name = "data Joe Smith";
         
         PARAMS_request p2;
         p2.n = n;
         p2.w = w;
-        p2.name = Jane_l;
-        p2.request_buff = &request_buff;
+        p2.name = Jane_name;
+        p2.request_buffer = &request_buffer;
         p2.l = &lock;
         PARAMS_request* p2_ptr = &p2;
         pthread_create(&all_threads[0], NULL, &request_thread_function, p2_ptr);
@@ -413,8 +375,8 @@ int main(int argc, char * argv[]) {
         PARAMS_request p3;
         p3.n = n;
         p3.w = w;
-        p3.name = Joe_l;
-        p3.request_buff = &request_buff;
+        p3.name = Joe_name;
+        p3.request_buffer = &request_buffer;
         p3.l = &lock;
         PARAMS_request* p3_ptr = &p3;
         pthread_create(&all_threads[2], NULL, &request_thread_function, p3_ptr);
@@ -422,122 +384,92 @@ int main(int argc, char * argv[]) {
         PARAMS_request p1;
         p1.n = n;
         p1.w = w;
-        p1.name = John_l;
-        p1.request_buff = &request_buff;
+        p1.name = John_name;
+        p1.request_buffer = &request_buffer;
         p1.l = &lock;
         PARAMS_request* p1_ptr = &p1;
         pthread_create(&all_threads[1], NULL, &request_thread_function, p1_ptr);
         
-        //////////////////////////////
-        // Deal WIth Worker Thread //
-        //////////////////////////////
+        vector<RequestChannel*> channels(w, 0);
         
-        //create channels and add to list
-        std::vector<RequestChannel*> channels(w, 0);
-        for(int i = 0; i < w; i++)  {
-            std::string s = chan->send_request("newthread");
+        for(int i = 0; i < w; i++){
+            string s = chan->send_request("newthread");
             RequestChannel *workerChannel = new RequestChannel(s, RequestChannel::CLIENT_SIDE);
             channels[i] = workerChannel;
         }
-        //Create one worker thread
+        
         PARAMS_request p;
-        p.work_chan_vector = channels;
-        p.request_buff = &request_buff;
-        p.john_response = &john_response;
-        p.joe_response = &joe_response;
-        p.jane_response = &jane_response;
+        p.work_channel_vector = channels;
+        p.request_buffer = &request_buffer;
+        p.results_john = &results_john;
+        p.results_joe = &results_joe;
+        p.results_jane = &results_jane;
         p.l = &lock;
         p.w = w;
         p.n = n;
         PARAMS_request* p_ptr = &p;
         pthread_create(&all_threads[3], NULL, &worker_thread_function, p_ptr);
         
-        //////////////////////////////////
-        // Deal WIth Statistics Threads //
-        //////////////////////////////////
-        
-        //JOHN
         PARAMS_request p4;
         p4.n = n;
-        p4.name = John_l;
-        p4.john_count = &john_frequency_count;
-        p4.john_response = &john_response;
-        p4.response_index = 0;
+        p4.name = John_name;
+        p4.count_john = &frequency_john;
+        p4.results_john = &results_john;
+        p4.results_index = 0;
         PARAMS_request* p4_ptr = &p4;
-        p4.count_vectors[p4.response_index] = &john_frequency_count;
+        p4.vector_numbers[p4.results_index] = &frequency_john;
         pthread_create(&all_threads[4], NULL, &stat_thread_function, p4_ptr);
         
-        //printf("[%s] %d\n", __FUNCTION__, __LINE__);
-        //JANE
         PARAMS_request p5;
         p5.n = n;
-        p5.name = Jane_l;
-        p5.jane_count = &jane_frequency_count;
-        p5.jane_response = &jane_response;
-        p5.response_index = 1;
+        p5.name = Jane_name;
+        p5.count_jane = &frequency_jane;
+        p5.results_jane = &results_jane;
+        p5.results_index = 1;
         PARAMS_request* p5_ptr = &p5;
-        p5.count_vectors[p5.response_index] = &jane_frequency_count;
+        p5.vector_numbers[p5.results_index] = &frequency_jane;
         pthread_create(&all_threads[5], NULL, &stat_thread_function, p5_ptr);
         
-        //printf("[%s] %d\n", __FUNCTION__, __LINE__);
-        //JOE
         PARAMS_request p6;
         p6.n = n;
-        p6.name = Joe_l;
-        p6.joe_count = &joe_frequency_count;
-        p6.joe_response = &joe_response;
-        p6.response_index = 2;
+        p6.name = Joe_name;
+        p6.count_joe = &frequency_joe;
+        p6.results_joe = &results_joe;
+        p6.results_index = 2;
         PARAMS_request* p6_ptr = &p6;
-        p6.count_vectors[p6.response_index] = &joe_frequency_count;
+        p6.vector_numbers[p6.results_index] = &frequency_joe;
         pthread_create(&all_threads[6], NULL, &stat_thread_function, p6_ptr);
         
-        
-        //printf("[%s] %d\n", __FUNCTION__, __LINE__);
-        // PARAMS_request p_quit;
-        // p_quit.w = w;
-        // p_quit.request_buff = &request_buff;
-        // p_quit.l = &lock;
-        // PARAMS_request* p_quit_ptr = &p_quit;
-        // pthread_create(&all_threads[7], NULL, &quit_function, p_quit_ptr);
-        
-        
-        //join threads
         for(int i = 0; i < 7; ++i){
-            //printf("joining thread: %d\n", i);
             pthread_join(all_threads[i], NULL);
         }
         
-        ////////////////////////////////////////////////////////////////////////////////////////////////////////
-        
         pthread_mutex_destroy(&lock);
         
-        //end timer
         gettimeofday (&finish_time, NULL);
         start_usecs = (start_time.tv_sec * 1e6) + start_time.tv_usec;
         finish_usecs = (finish_time.tv_sec * 1e6) + finish_time.tv_usec;
         system("clear");
-        std::cout << "Finished!" << std::endl;
+        cout << "Finished!" << endl;
         
-        //print stuff
-        std::cout << "Results for n == " << n << ", w == " << w << std::endl;
-        std::cout << "Time to completion: " << std::to_string(finish_usecs - start_usecs) << " usecs\n" << std::endl;
+        cout << "Results for n == " << n << ", w == " << w << endl;
+        cout << "Time to completion: " << to_string(finish_usecs - start_usecs) << " usecs\n" << endl;
         
         
-        std::cout << "John Smith total: " << accumulate(john_frequency_count.begin(), john_frequency_count.end(), 0) << std::endl;
-        std::cout << p4.results << std::endl; //supposed to print the histogram
-        std::cout << "Jane Smith total: " << accumulate(jane_frequency_count.begin(), jane_frequency_count.end(), 0) << std::endl;
-        std::cout << p5.results << std::endl; //supposed to print the histogram
-        std::cout << "Joe Smith total: " << accumulate(joe_frequency_count.begin(), joe_frequency_count.end(), 0) << std::endl;
-        std::cout << p6.results << std::endl; //supposed to print the histogram
+        cout << "John Smith total: " << accumulate(frequency_john.begin(), frequency_john.end(), 0) << endl;
+        cout << p4.results << endl;
+        cout << "Jane Smith total: " << accumulate(frequency_jane.begin(), frequency_jane.end(), 0) << endl;
+        cout << p5.results << endl;
+        cout << "Joe Smith total: " << accumulate(frequency_joe.begin(), frequency_joe.end(), 0) << endl;
+        cout << p6.results << endl;
         
-        // end of Nat additions
-
         ofs.close();
-        std::cout << "Sleeping..." << std::endl;
+        cout << "Sleeping..." << endl;
         usleep(10000);
-        std::string finale = chan->send_request("quit");
-        std::cout << "Finale: " << finale << std::endl;
+        string finale = chan->send_request("quit");
+        cout << "Finale: " << finale << endl;
     }
-	else if (pid == 0)
-		execl("dataserver", NULL);
+    else if (pid == 0)
+        execl("dataserver", NULL);
 }
+
