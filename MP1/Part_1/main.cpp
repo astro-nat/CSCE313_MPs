@@ -18,8 +18,9 @@
 
 int main(int argc, char ** argv)
 {
-    int b;
-    int M;
+    
+    int b = 128;
+    int M = b * 11;
     int c;
     char *block, *mem;
     extern char *optarg;

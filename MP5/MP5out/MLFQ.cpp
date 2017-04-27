@@ -5,6 +5,10 @@
 //Process with smaller arrival time will have smaller index in the vector
 
 //After filling in the top 3 levels, then do insertion for the fcfs level
+
+int timeElapsed = 0;
+vector<Process> procs;
+
 MLFQ::MLFQ(string file)
 {
     extractProcessInfo(file);
@@ -18,71 +22,38 @@ MLFQ::MLFQ(string file)
     
     * when time quantum used up on given level, drop a level until it finds a spot
      */
-
-    // initialize to 3 levels
-    upperLevels.resize(3);
-    upperLevels[0].resize(LEVEL1_CAPACITY);
-    upperLevels[1].resize(LEVEL2_CAPACITY);
-    upperLevels[2].resize(LEVEL3_CAPACITY);
     
-    // load upper levels
-    int position = 0;
+    vector<shared_ptr<Process>> level1;
+    vector<shared_ptr<Process>> level2;
+    vector<shared_ptr<Process>> level3;
+    
     for(int i = 0; i < process_info.size(); i++) {
+        int x = get<0>(process_info[i]);
+        int y = get<1>(process_info[i]);
+        int z = get<2>(process_info[i]);
         
-        shared_ptr<Process> p = shared_ptr<Process>(new Process(get<0>(process_info[i]), get<1>(process_info[i]), get<2>(process_info[i])));
-        
-        // start at level 1
-        int quantum = 0;
-        while(position != LEVEL1_CAPACITY && !p->is_Completed() && quantum < LEVEL1_QUANTUM) {
-            
-            cout << "Starting level 1 load" << endl;
-            upperLevels[0][position] = p;
-            p->update_remaining_time(p->get_remaining_time() - 1);
-            position++;
-            
-            p->change_arrival_time(position);
-            degrade_process(p,0,position);
-            
-            quantum++;
+        shared_ptr<Process> sp(new Process(x,y,z));
+        if(level1.size() != LEVEL1_CAPACITY){
+            level1.push_back(sp);
+        }
+        else if(level2.size() != LEVEL2_CAPACITY) {
+            level2.push_back(sp);
+        }
+        else if(level3.size() != LEVEL3_CAPACITY){
+            level3.push_back(sp);
+        }
+        else {
+            Process* proc = new Process(x,y,z);
+            procs.push_back(*proc);
+            lowestLevel.push(*proc);
         }
         
-        // if level 1 capacity or quantum reached, drop to level 2
-        while(upperLevels[1].size() != LEVEL1_CAPACITY && !p->is_Completed()) {
-            
-            cout << "Starting level 2 load" << endl;
-            int quantum = 0;
-            while(quantum < LEVEL2_QUANTUM && p->get_remaining_time() != 0) {
-                
-                upperLevels[1].push_back(p);
-                p->update_remaining_time(p->get_remaining_time() - 1);
-            }
-            
-            p->change_arrival_time(p->get_arrival_time() - LEVEL2_QUANTUM);
-            degrade_process(p,0,p->get_arrival_time());
-        }
-        
-        // if level 2 capacity or quantum reached, drop to level 3
-        while(upperLevels[2].size() != LEVEL1_CAPACITY && !p->is_Completed()) {
-            
-            cout << "Starting level 3 load" << endl;
-            int quantum = 0;
-                while(quantum < LEVEL2_QUANTUM && p->get_remaining_time() != 0) {
-                    upperLevels[2].push_back(p);
-                    p->update_remaining_time(p->get_remaining_time() - 1);
-                }
-                p->change_arrival_time(p->get_arrival_time() - LEVEL3_QUANTUM);
-                degrade_process(p,0,p->get_arrival_time());
-            }
-            // if level 3 capacity or quantum eached, drop to lowest level
-        
-        if(!p->is_Completed()) {
-            
-            cout << "Starting lowest level load" << endl;
-            lowestLevel.push(*p);
-            update_last_process_fcfs(*p);
-            position++;
-        }
     }
+    upperLevels.push_back(level1);
+    upperLevels.push_back(level2);
+    upperLevels.push_back(level3);
+    
+
 
 }
 
@@ -151,27 +122,67 @@ Make sure print out the timing information correctly
 */
 void MLFQ::schedule_tasks(){
 	
-    int system_time = 0;
+    int totalTime = 0;
+    vector<int> finishedTime;
+    vector<int> lowestfinishedTime;
+    vector<Process> finished;
+    vector<int> lowestLvlPids;
     
-    cout << "System Time[" << system_time << "].........First Level Queue Starts Work\n";
-    for(int i = 0; i < upperLevels[0].size(); i++) {
-        cout << "System Time[" << system_time << "].........Process[PID=" << upperLevels[0][i]->getPid() << "] is Running" << endl;
-        system_time++;
-    }
-    cout << "System Time[" << system_time << "].........Second Level Queue Starts Work\n";
-    for(int i = 0; i < upperLevels[1].size(); i++) {
-        cout << "System Time[" << system_time << "].........Process[PID=" << upperLevels[1][i]->getPid() << "] is Running" << endl;
-        system_time++;
-    }
-    cout << "System Time[" << system_time << "].........Third Level Queue Starts Work\n";
-    for(int i = 0; i < upperLevels[2].size(); i++) {
-        cout << "System Time[" << system_time << "].........Process[PID=" << upperLevels[2][i]->getPid() << "] is Running" << endl;
-        system_time++;
-    }
-    cout << "System Time[" << system_time << "].........FCFS Level Queue Starts Work";
-    for(int i = 0; i < lowestLevel.size(); i++) {
-        cout << "System Time[" << system_time << "].........Process[PID=" << lowestLevel.top().getPid() << "] is Running" << endl;
-        system_time++;
-    }
+    for(auto ele : process_info) {
+        
+        for(int lvl = 0; lvl<= 2; lvl++) {
+            
+            int quantum;
+            string levelLabel;
+            if(lvl == 0) { quantum = LEVEL1_QUANTUM; levelLabel = "First";}
+            if(lvl == 1) { quantum = LEVEL2_QUANTUM; levelLabel = "Second";}
+            if(lvl == 2) { quantum = LEVEL3_QUANTUM; levelLabel = "Third";}
+            
+            if(upperLevels[lvl].size() != 0) {
+                cout << "System Time[" << timeElapsed << "]........." << levelLabel << " Level Queue Starts Work\n";
+            }
+            
+            while(upperLevels[lvl].size() != 0) {
+                if(upperLevels[lvl][0]->is_Completed()) {
+                    
+                    cout << "SystemTime["
+                    << timeElapsed<<"]......."<<"Process[PID=" << upperLevels[lvl][0]->getPid()<<"] is Running" << endl;
+                    upperLevels[lvl].erase(upperLevels[lvl].begin());
+                }
+                else if(upperLevels[lvl][0]->get_remaining_time() < quantum) {
+                    
+                    cout << "SystemTime["
+                    << timeElapsed<<"]......."<<"Process[PID=" << upperLevels[lvl][0]->getPid()<<"] is Running" << endl;
+                    
+                    for(int j = 0; j < upperLevels[lvl][0]->get_remaining_time(); j++) {
+                        cout << "SystemTime["
+                        << timeElapsed<<"]......."<<"Process[PID=" << upperLevels[lvl][0]->getPid()<<"] is Running" << endl;
+                        timeElapsed++;
+                    }
+                    cout << "SystemTime["
+                    << timeElapsed<<"]......."<<"Process[PID=" << upperLevels[lvl][0]->getPid()<<"] is Running" << endl;
+                    upperLevels[lvl][0]->Run(upperLevels[lvl][0]->get_remaining_time());
+                    degrade_process(upperLevels[lvl][0],lvl,0);
+                }
+                else {
+                    
+                    upperLevels[lvl][0]->Run(quantum);
+                    for(int k = 0; k < quantum; k++) {
+                        cout << "SystemTime["
+                        << timeElapsed<<"]......."<<"Process[PID=" << upperLevels[lvl][0]->getPid()<<"] is Running" << endl;
+                        timeElapsed++;
+                    }
+                    cout << "SystemTime["
+                    << timeElapsed<<"]......."<<"Process[PID=" << upperLevels[lvl][0]->getPid()<<"] is Running" << endl;
+                    
+                    degrade_process(upperLevels[lvl][0],lvl,0);
+
+                }
+            }
+        }
+        
+        
+        }
+    cout << "All done" << endl;
     
 }
