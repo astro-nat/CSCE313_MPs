@@ -122,11 +122,6 @@ Make sure print out the timing information correctly
 */
 void MLFQ::schedule_tasks(){
 	
-    int totalTime = 0;
-    vector<int> finishedTime;
-    vector<int> lowestfinishedTime;
-    vector<Process> finished;
-    vector<int> lowestLvlPids;
     
     for(auto ele : process_info) {
         
@@ -135,7 +130,7 @@ void MLFQ::schedule_tasks(){
             int quantum;
             string levelLabel;
             if(lvl == 0) { quantum = LEVEL1_QUANTUM; levelLabel = "First";}
-            if(lvl == 1) { quantum = LEVEL2_QUANTUM; levelLabel = "Second";}
+            if(lvl == 1) { quantum = LEVEL2_QUANTUM; levelLabel = "Second"; }
             if(lvl == 2) { quantum = LEVEL3_QUANTUM; levelLabel = "Third";}
             
             if(upperLevels[lvl].size() != 0) {
