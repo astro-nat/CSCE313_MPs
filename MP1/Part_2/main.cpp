@@ -48,7 +48,7 @@ int main(int argc, char ** argv)
         default:
             printf("No values given. Using default values.\n");
             b = 128;
-            M = b*16;
+            M = b * 16;
             t = 4;
             break;
     }
@@ -63,20 +63,20 @@ int main(int argc, char ** argv)
     
     test_list->Init(M, b, t); // initialize
     // test operations
-    //int testnums [] = {0, 1<<29 , (1<<29) + 5 , 50, (1<<30) + 5, (1<<30) - 500};
+    int testnums [] = {0, 1<<29 , (1<<29) + 5 , 50, (1<<30) + 5, (1<<30) - 500};
     int i = 0;
     printf("before inserting\n");
     test_list->Insert(1, "abc", 80);
     test_list->Insert(3, "kkk", 78);
     // some sample insertions
-    /*
+    
     for (i=0; i< 2; i ++)
     {
         test_list->Insert (testnums [i], buf, 50);   // insert 50 bytes from the buffer as value for each of the insertions
     }
-     */
-    //test_list->PrintList();
+    
+    test_list->PrintList();
     
     // end test operations	
-    //test_list->Destroy();
+    test_list->Destroy();
 }
