@@ -1,8 +1,8 @@
 /* --------------------------------------------------------------------------- */
-/* Developer: Natalie Cluck, Megan Fischer                                     */
+/* Developer: Andrew Kirfman, Margaret Baxter                                  */
 /* Project: CSCE-313 Machine Problem #1                                        */
 /*                                                                             */
-/* File: ./MP1/linkedlist2.h                                                   */
+/* File: ./MP1/linked_list2.cpp                                                */
 /* --------------------------------------------------------------------------- */
 
 /* --------------------------------------------------------------------------- */
@@ -26,23 +26,23 @@ linked_list2::linked_list2()
     free_pointer = NULL;
     free_data_pointer = NULL;
     
-    setBlockSize(0);
-    setMemSize(0);
-    setMaxDataSize(0);
-    setNumTiers(0);
+    block_size = 0;
+    mem_size = 0;
+    max_data_size = 0;
+    num_tiers = 0;
     setInitialized(false);
 }
 
 void linked_list2::Init(int M, int b, int t)
 {
-    if (!getInitialized()) {
-        while (M < b) {
-            cout << "Memory size cannot be less than block size. Enter new memory size: " << endl;
-            cin >> M; 
-        }
+    /* If the list has already been initialized, don't do anything */
+    if (initialized == true)
+    {
+        std::cout << "The list has already been initialized!" << std::endl;
+        return;
     }
     
-    
+    /* User can't define a block size bigger than the total amount of memory */
     if (M < b)
     {
         do
@@ -167,7 +167,7 @@ void linked_list2::Init(int M, int b, int t)
     }
     
     /* Set the initialized flag in the linked_list class. */
-    initialized = true;
+    setInitialized(true);
 }
 
 
@@ -543,7 +543,7 @@ int linked_list2::getNumTiers()
     return num_tiers;
 }
 
-bool linked_list2::getInitialized()
+int linked_list2::getInitialized()
 {
     return initialized;
 }
