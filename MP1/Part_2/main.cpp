@@ -23,21 +23,21 @@
 
 int main(int argc, char ** argv)
 {
-    int b;
-    int M;
-    int t;
+    int b = 128;
+    int M = b * 16;
+    int t = 4;
     int c;
     char *block, *mem, *tiers;
     extern char *optarg;
     
-    while ((c = getopt (argc, argv, "b:s:t:")) != -1)
+    while ((c = getopt (argc, argv, "b:M:t:")) != -1)
         switch (c)
     {
         case 'b':
             block = optarg;
             b = atoi(block);
             break;
-        case 's':
+        case 'M':
             mem = optarg;
             M = atoi(mem);
             break;
@@ -65,12 +65,12 @@ int main(int argc, char ** argv)
     // test operations
     int testnums [] = {0, 1<<29 , (1<<29) + 5 , 50, (1<<30) + 5, (1<<30) - 500};
     int i = 0;
-    printf("before inserting\n");
-    test_list->Insert(1, "abc", 80);
-    test_list->Insert(3, "kkk", 78);
+    ///printf("before inserting\n");
+    //test_list->Insert(1, "abc", 80);
+    //test_list->Insert(3, "kkk", 78);
     // some sample insertions
     
-    for (i=0; i< 2; i ++)
+    for (i=0; i < 6; i ++)
     {
         test_list->Insert (testnums [i], buf, 50);   // insert 50 bytes from the buffer as value for each of the insertions
     }

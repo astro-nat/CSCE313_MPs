@@ -39,7 +39,7 @@ int main(int argc, char ** argv)
         default:
             printf("No values given. Using default values.\n");
             b = 128;
-            M = b*11;
+            M = b * 11;
             break;
     }
     
