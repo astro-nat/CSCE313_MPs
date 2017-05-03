@@ -49,11 +49,10 @@ MLFQ::MLFQ(string file)
         }
         
     }
+    
     upperLevels.push_back(level1);
     upperLevels.push_back(level2);
     upperLevels.push_back(level3);
-    
-
 
 }
 
@@ -121,7 +120,13 @@ You can use multiple loops here to do the job based on the document;
 Make sure print out the timing information correctly
 */
 void MLFQ::schedule_tasks(){
-	
+    int system_time = 0;
+    int timeElapsed = 0;
+    int complete_count = 0;
+    int response_time = 0;
+    
+    //int wait_times[processVec.size()];
+    //int response_times[processVec.size()];
     
     for(auto ele : process_info) {
         
@@ -143,12 +148,13 @@ void MLFQ::schedule_tasks(){
                     cout << "SystemTime["
                     << timeElapsed<<"]......."<<"Process[PID=" << upperLevels[lvl][0]->getPid()<<"] is Running" << endl;
                     upperLevels[lvl].erase(upperLevels[lvl].begin());
+                    complete_count++;
                 }
                 else if(upperLevels[lvl][0]->get_remaining_time() < quantum) {
                     
                     cout << "SystemTime["
                     << timeElapsed<<"]......."<<"Process[PID=" << upperLevels[lvl][0]->getPid()<<"] is Running" << endl;
-                    
+                    complete_count++;
                     for(int j = 0; j < upperLevels[lvl][0]->get_remaining_time(); j++) {
                         cout << "SystemTime["
                         << timeElapsed<<"]......."<<"Process[PID=" << upperLevels[lvl][0]->getPid()<<"] is Running" << endl;
@@ -156,6 +162,7 @@ void MLFQ::schedule_tasks(){
                     }
                     cout << "SystemTime["
                     << timeElapsed<<"]......."<<"Process[PID=" << upperLevels[lvl][0]->getPid()<<"] is Running" << endl;
+                    complete_count++;
                     upperLevels[lvl][0]->Run(upperLevels[lvl][0]->get_remaining_time());
                     degrade_process(upperLevels[lvl][0],lvl,0);
                 }
@@ -169,15 +176,29 @@ void MLFQ::schedule_tasks(){
                     }
                     cout << "SystemTime["
                     << timeElapsed<<"]......."<<"Process[PID=" << upperLevels[lvl][0]->getPid()<<"] is Running" << endl;
+                    timeElapsed++;
+                    system_time = timeElapsed;
                     
+                    response_time = complete_count;
+
                     degrade_process(upperLevels[lvl][0],lvl,0);
 
                 }
             }
         }
         
-        
         }
     cout << "All done" << endl;
+    
+    double wait_time_sum = 0;
+    double response_time_sum = 0;
+    wait_time_sum += system_time;
+    response_time_sum += response_time;
+    
+    cout << "wait_time_sum: " << wait_time_sum << endl;
+    cout << "response_time_sum " << response_time_sum << endl;
+    cout << "Average wait time: " << wait_time_sum/10 << endl;
+    cout << "Average response time: " << response_time_sum/10 << endl;
+    
     
 }

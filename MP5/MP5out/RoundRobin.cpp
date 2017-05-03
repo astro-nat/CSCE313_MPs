@@ -104,6 +104,8 @@ void RoundRobin::schedule_tasks() {
         response_time_sum += response_times[i];
     }
     
+    cout << "wait_time_sum: " << wait_time_sum << endl;
+    cout << "response_time_sum " << response_time_sum << endl;
     cout << "Average wait time: " << wait_time_sum/processVec.size() << endl;
     cout << "Average response time: " << response_time_sum/processVec.size() << endl;
 
